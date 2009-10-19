@@ -1,0 +1,12 @@
+20/08/2009: Added an extra-info system to provide the user with extra information created during shortening.
+20/08/2009: Changed and improved CSS, added the ability to specify custom shortURL (a-la most URL shortening services), added a validator function for custom URLs. Added fallback code to prevent issues when a custom URL is already in use/isn't valid (reverts to randomly generated 4-character string).
+20/08/2009: Altered redirection code to include HTTP header 301 Moved Permanently
+11/10/2009: Complete overhaul, adding file uploads and generally improving the system.
+	-Changed DB name to reflect project name
+	-Added file uploads
+	-Added two extra fields in DB for determining type of entry, and file upload-specific 'filename' field. NULL by default.
+	-Removed redundant 'ID' field, wasn't being used.
+11/10/2009: Fixed some issues with the database, file storage and downloading, added a login system to prevent public access to the upload system. The public can still use the URL shortener though.
+15/10/2009: Fixed more issues with the database, added a table for username storage and temporary user approval. Will add a method for disapproving users later.
+16/10/2009: Added content-length header to return correct filesize of the file being downloaded
+16/10/2009: Added an /upload for immediate file uploading

@@ -1,0 +1,32 @@
+Slurp! v0.1a (Prerelease Alpha 1)
+Slurp! is a URL shortener and file upload service. It is installable pretty much anywhere that wordpress is.
+Slurp! uses PHPMailer to send emails.
+Please ensure you've configured Slurp! via config.php.
+
+You'll need:
+A webserver supporting PHP 4.3 or newer (only tested in 5.0)
+The PHP extension mysqli installed and usable
+A MySQL server with the database set up accordingly (An install script is coming soon)
+At least 100mb free on your web server. Slurp! itself only consumes 150~kb, but with file uploading being supported, extra space will be needed.
+
+
+
+Database specifications:
+A table for the main storage ('slurp')
+-Contains fields:
+	'short', set type to 'text'
+	'notshort', set type to 'text'
+	'isURL', set type to Int, size as 1 character
+	'filename', set type to 'text', default to NULL
+	
+A table for users ('slurp_usr')
+-Contains fields:
+	'username', set type to 'text'
+	'password', set type to 'varchar', size as 128 characters.
+	
+A table for pending user registrations ('slurp_reqs')
+-Contains fields:
+	'tmpKey', set type to 'varchar', size as 20 characters
+	'uname', set type to 'text'
+	'passwd', set type to 'varchar', size as 128 characters
+	'mail', set type to 'text'
