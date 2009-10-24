@@ -10,3 +10,4 @@
 15/10/2009: Fixed more issues with the database, added a table for username storage and temporary user approval. Will add a method for disapproving users later.
 16/10/2009: Added content-length header to return correct filesize of the file being downloaded
 16/10/2009: Added an /upload for immediate file uploading
+24/10/2009: Added an installer and a fresh-install check.
