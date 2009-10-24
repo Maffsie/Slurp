@@ -1,12 +1,13 @@
 <?php
 $url = str_replace('/','',$_SERVER['REQUEST_URI']);
 require_once('config.php');
-if($url != '') {
-	//Check it's installed. If not, start the installer.
-	if(DB_HOST == 'Database_Host' && DB_USER == 'Database_User' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name') { #Basic check for DB info. It doesn't check for password because sometimes this is left blank.
-		include('install.php');
-		die();
-	}
+if($url == 'style.css') {
+	include('style.css');
+	die();
+}
+if(file_exists('install.php') && ($url == 'install' || DB_HOST == 'Database_Host' && DB_USR == 'Database_Username' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name')) {
+	include('install.php');
+	die();
 }
 if($url == 'add') {
 	if($_POST['uploadInstead'] == 1 || $_POST['hType'] == 'file')
@@ -29,10 +30,6 @@ if($url == 'request') {
 }
 if(substr($url,0,7) == 'approve') {
 	include('approve.php');
-	die();
-}
-if($url == 'style.css') {
-	include('style.css');
 	die();
 }
 //Init DB

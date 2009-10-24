@@ -31,7 +31,7 @@ switch($stage) {
 		$tUsr = $_POST['dbUser'];
 		$tPass = $_POST['dbPass'];
 		$tName = $_POST['dbName'];
-		$dbT = new mysqli($tHost,$tUsr,$tPass,$tName)
+		$dbT = new mysqli($tHost,$tUsr,$tPass,$tName);
 		if(mysqli_connect_errno()) {
 			$err .= 'Could not connect to database. Error: '.mysqli_connect_error().'<br />';
 		} else {
@@ -45,10 +45,12 @@ switch($stage) {
 				}
 				return $rtrn;
 			}
-			$dbT->close();
-			$conf = file_get_contents('config.php');
+			$cfh = fopen('slurp/config.php','r');
+			while(!feof($cfh))
+				$conf .= fgets($cfh);
+			fclose($cfh);
 			$conf_orig = $conf;
-			$fh = fopen('config.php','w+');
+			$fh = fopen('slurp/config.php','w');
 			$conf = str_replace('Database_Username',$tUsr,$conf);
 			$conf = str_replace('Database_Password',$tPass,$conf);
 			$conf = str_replace('Database_Host',$tHost,$conf);
@@ -60,14 +62,12 @@ switch($stage) {
 			$conf = str_replace('Cookie_Data',generate(),$conf);
 			fwrite($fh,$conf);
 			fclose($fh);
-			require_once('config.php');
-			$db = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
-			$q1 = $db->query("CREATE TABLE ".TB_MAIN." (`short` text NOT NULL,`notshort` text NOT NULL,`isURL` int(1) NOT NULL,`filename` text) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-			$q2 = $db->query("CREATE TABLE ".TB_TMP." (`tmpKey` varchar(20) NOT NULL,`uname` text NOT NULL,`passwd` varchar(128) NOT NULL,`mail` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-			$q3 = $db->query("CREATE TABLE ".TB_USRS." (`username` text NOT NULL,`password` varchar(128) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+			$q1 = $dbT->query("CREATE TABLE `".$prefix."main` (`short` text NOT NULL,`notshort` text NOT NULL,`isURL` int(1) NOT NULL,`filename` text) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+			$q2 = $dbT->query("CREATE TABLE `".$prefix."tmp` (`tmpKey` varchar(20) NOT NULL,`uname` text NOT NULL,`passwd` varchar(128) NOT NULL,`mail` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+			$q3 = $dbT->query("CREATE TABLE `".$prefix."users` (`username` text NOT NULL,`password` varchar(128) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 			if(!$q1 || !$q2 || !$q3) {
 				$err .= 'Could not create tables. Error: '.mysqli_error().'<br />Config file reset. Please try again :c<br />';
-				$fh = fopen('config.php','w+');
+				$fh = fopen('slurp/config.php','w');
 				fwrite($fh,$conf_orig);
 				fclose($fh);
 			}
@@ -85,7 +85,7 @@ switch($stage) {
 						This is the second-last step!<br />
 						<form action='' method='post'>
 							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
-							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr> </span><input type='text' name='baseDomain' value='<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4) } echo $host; ?>' /> (This was auto-detected. Correct as necessary)<br />
+							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value='<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>' /><br />
 							<input type='hidden' name='stageNum' value='extraSetup' />
 							<input type='submit' value='Go!' />
 						</form>
@@ -128,13 +128,32 @@ switch($stage) {
 			$err .= 'URL length was not provided';
 		if(isset($err)) {
 			?>
-			
+			<html>
+				<head>
+					<link rel='stylesheet' href='/style.css' />
+					<title>Install Slurp!</title>
+				</head>
+				<body>
+					<div id='wrapper'>
+						<h1>Extra configuration.</h1>
+						<b>Error: </b><?php echo $err; ?><br />
+						<form action='' method='post'>
+							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
+							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value='<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>' /><br />
+							<input type='hidden' name='stageNum' value='extraSetup' />
+							<input type='submit' value='Go!' />
+						</form>
+					</div>
+				</body>
+			</html>
 			<?php
 		} else {
-			$conf = file_get_contents('config.php');
-			$fh = fopen('config.php','w+');
+			$cfh = fopen('slurp/config.php','r');
+			while(!feof($cfh))
+				$conf .= fgets($cfh);
+			$fh = fopen('slurp/config.php','w');
 			$conf = str_replace('URL_Length',$urlLen,$conf);
-			$conf = str_replace('Base_Domain',$baseD,$conf);
+			$conf = str_replace('Base_Site_URL',$baseD,$conf);
 			fwrite($fh,$conf);
 			fclose($fh);
 			?>
@@ -149,7 +168,7 @@ switch($stage) {
 						Set up your user account<br />
 						<form action='' method='post'>
 							<span id='small'>Username: </span><input type='text' name='uName' /><br />
-							<span id='small'>Password: </span><input type='text' name='uPass' /><br />
+							<span id='small'>Password: </span><input type='password' name='uPass' /><br />
 							<input type='hidden' name='stageNum' value='userSetup' />
 							<input type='submit' value='Go!' />
 						</form>
@@ -171,12 +190,11 @@ switch($stage) {
 		if(strlen($uP) > 0 && strlen($uP) <= 6)
 			$err .= 'Password too short!<br />';
 		if(!isset($err)) {
-			require_once('config.php');
 			$uP = hash('whirlpool',$uP);
-			$db = new mysqli(DB_HOST,DB_USER,DB_PASS,DB_NAME);
+			$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 			$q = $db->query("INSERT INTO ".TB_USRS." (username, password) VALUES ('$uN', '$uP')");
 			if(!$q)
-				$err .= 'Could not create user. Error: '.mysqli_error().'<br />';
+				$err .= 'Could not create user. MySQL said: '.mysqli_error().'<br />';
 		}
 		if(isset($err)) {
 			?>
@@ -191,7 +209,7 @@ switch($stage) {
 						<b>Error:</b> <?php echo $err; ?><br />
 						<form action='' method='post'>
 							<span id='small'>Username: </span><input type='text' name='uName' /><br />
-							<span id='small'>Password: </span><input type='text' name='uPass' /><br />
+							<span id='small'>Password: </span><input type='password' name='uPass' /><br />
 							<input type='hidden' name='stageNum' value='userSetup' />
 							<input type='submit' value='Go!' />
 						</form>
@@ -221,7 +239,7 @@ switch($stage) {
 		}
 		break;
 	case 'complete':
-		unlink('install.php');
+		unlink('slurp/install.php');
 		header('Location: /login');
 		break;
 }

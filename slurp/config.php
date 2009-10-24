@@ -12,7 +12,7 @@ define('TB_MAIN','Table_Main_Name'); #Name for main Slurp table
 define('TB_USRS','Table_Users_Name'); #Username/Passwords for users
 define('TB_TMP','Table_Temp_Name'); #Pending requests for users
 define('URL_LEN','URL_Length'); #Length of URLs to produce
-define('COOKIE_DATA','Cookie_Data') #Data to set in the cookie when logging in.
+define('COOKIE_DATA','Cookie_Data'); #Data to set in the cookie when logging in.
 define('BASE_URL','Base_Site_URL'); #Base URL of your site. This should, ideally, be YourDomain.com. Don't put any slashes in, and only put a www. in if it is necessary.
 
 
