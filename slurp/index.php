@@ -1,5 +1,13 @@
 <?php
 $url = str_replace('/','',$_SERVER['REQUEST_URI']);
+require_once('config.php');
+if($url != '') {
+	//Check it's installed. If not, start the installer.
+	if(DB_HOST == 'Database_Host' && DB_USER == 'Database_User' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name') { #Basic check for DB info. It doesn't check for password because sometimes this is left blank.
+		include('install.php');
+		die();
+	}
+}
 if($url == 'add') {
 	if($_POST['uploadInstead'] == 1 || $_POST['hType'] == 'file')
 		include('add2.php');
@@ -28,7 +36,6 @@ if($url == 'style.css') {
 	die();
 }
 //Init DB
-require_once('config.php');
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 $q = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$url'");
 if($q->num_rows == 0) {
