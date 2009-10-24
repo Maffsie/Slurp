@@ -5,8 +5,12 @@ if($url == 'style.css') {
 	include('style.css');
 	die();
 }
-if(file_exists('install.php') && ($url == 'install' || DB_HOST == 'Database_Host' && DB_USR == 'Database_Username' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name')) {
+if(file_exists('slurp/install.php') && $url == 'install') {
 	include('install.php');
+	die();
+}
+if(DB_HOST == 'Database_Host' && DB_USR == 'Database_Username' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name') {
+	header('Location: /install');
 	die();
 }
 if($url == 'add') {
