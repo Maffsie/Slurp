@@ -114,5 +114,6 @@ switch($stage) {
 	case 'complete':
 		echo "Setup complete";
 		unlink('install.php');
+		header('Location: /login');
 		break;
 }
