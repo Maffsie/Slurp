@@ -63,26 +63,30 @@ if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 </html>
 		<?php
 	} else {
-		include('phpmailer.php');
-		$mail = new PHPMailer();
-		$rnd = generate();
-		$q = $db->query("INSERT INTO ".TB_TMP." (tmpKey, uname, passwd, mail) VALUES ('$rnd', '$uname', '$passwd', '$email')");
-		#Emails those who should be emailed.
-		$toSend = "$whoAreYou is requesting an account. Their information is as follows:\n<br />Username: $uname\n<br />Relation to you: $suppInfo\n<br />\n<br />To approve this user, click <a href='http://".BASE_URL."/approve/$rnd'>here</a>.";
-		$body = $toSend;
-		$body = eregi_replace("[\]", '', $body);
-		$mail->IsSMTP();
-		$mail->SMTPAuth   = SMTP_AUTH;
-		$mail->Host       = SMTP_HOST;
-		$mail->Port       = SMTP_PORT;
-		$mail->From       = SMTP_FROM;
-		$mail->FromName   = SMTP_FROMNAME;
-		$mail->Subject    = "Someone wants an account on Slurp!";
-		$mail->WordWrap   = 50; // set word wrap
-		$mail->MsgHTML($body);
-		$mail->AddAddress(MAIL_EMAIL,MAIL_NAME);
-		$mail->IsHTML(true); // send as HTML
-		$mail->Send();
+		if(REG_APP) {
+			include('phpmailer.php');
+			$mail = new PHPMailer();
+			$rnd = generate();
+			$q = $db->query("INSERT INTO ".TB_TMP." (tmpKey, uname, passwd, mail) VALUES ('$rnd', '$uname', '$passwd', '$email')");
+			#Emails those who should be emailed.
+			$toSend = "$whoAreYou is requesting an account. Their information is as follows:\n<br />Username: $uname\n<br />Relation to you: $suppInfo\n<br />\n<br />To approve this user, click <a href='http://".BASE_URL."/approve/$rnd'>here</a>.";
+			$body = $toSend;
+			$body = eregi_replace("[\]", '', $body);
+			$mail->IsSMTP();
+			$mail->SMTPAuth   = SMTP_AUTH;
+			$mail->Host       = SMTP_HOST;
+			$mail->Port       = SMTP_PORT;
+			$mail->From       = SMTP_FROM;
+			$mail->FromName   = SMTP_FROMNAME;
+			$mail->Subject    = "Someone wants an account on Slurp!";
+			$mail->WordWrap   = 50; // set word wrap
+			$mail->MsgHTML($body);
+			$mail->AddAddress(MAIL_EMAIL,MAIL_NAME);
+			$mail->IsHTML(true); // send as HTML
+			$mail->Send();
+		} else {
+			$q = $db->query("INSERT INTO ".TB_USRS." (username, password) VALUES ('$uname', '$passwd')");
+		}
 		?>
 <html>
 	<head>
@@ -91,7 +95,7 @@ if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 	</head>
 	<body>
 		<div id='wrapper'>
-			Account requested. You should recieve an email if your request has been approved.
+			<?php if(REG_APP){ ?>Account requested. You should recieve an email if your request has been approved.<?php } else { ?>Account created, you can now log in.<?php } ?>
 		</div>
 	</body>
 </html><?php }
@@ -108,10 +112,10 @@ if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 			<form action='' method='post'>
 				<span id='small'><abbr title='Must be longer than 4 characters'>Username</abbr>: </span><input type='text' name='reqUname' /><br />
 				<span id='small'><abbr title='Must be longer than 6 characters'>Password</abbr>: </span><input type='password' name='reqPasswd' /><br />
-				<span id='small'>Email address: </span><input type='text' name='email' /><br />
+				<?php if(REG_APP) { ?><span id='small'>Email address: </span><input type='text' name='email' /><br />
 				<span id='small'>Who are you? </span><input type='text' name='doIKnowYou' /><br />
 				<span id='small'>A little more info to convince us you're really you:</span><br />
-				<input type='text' name='extraInfo' /><br />
+				<input type='text' name='extraInfo' /><br /><?php } ?>
 				<input type='submit' value='Mmkay' />
 			</form>
 		</div>

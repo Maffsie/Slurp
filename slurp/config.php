@@ -16,7 +16,8 @@ define('COOKIE_DATA','Cookie_Data') #Data to set in the cookie when logging in.
 define('BASE_URL','Base_Site_URL'); #Base URL of your site. This should, ideally, be YourDomain.com. Don't put any slashes in, and only put a www. in if it is necessary.
 
 
-//Mailer settings
+//Mailer and registration settings
+define('REG_APP',false); #Enable or disable manual registration approving
 define('SMTP_HOST','SMTP_Host'); #SMTP Host
 define('SMTP_PORT',25); #SMTP Port, leave this as it is unless you know it should be different.
 define('SMTP_FROM','SMTP_From_Address'); #Email address to send from
