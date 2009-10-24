@@ -25,8 +25,10 @@ if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 		$err .= 'Password not long enough<br />';
 	if(strlen($_POST['reqPasswd']) == 0)
 		$err .= 'No password provided<br />';
-	if(strlen($uname) <= 4)
+	if(strlen($uname)  > 0 && strlen($uname) <= 4)
 		$err .= 'Username too short<br />';
+	if(strlen($uname) == 0)
+		$err .= 'No username provided!<br />';
 	if(strlen($whoAreYou) == 0)
 		$err .= 'You didn\'t say who you are!<br />';
 	if(strlen($email) == 0)
