@@ -106,7 +106,7 @@ switch($stage) {
 		}
 		break;
 	case 'extraSetup':
-		echo "oo";
+		echo "woo";
 		break;
 	case 'userSetup':
 		echo "user setup";
