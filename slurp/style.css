@@ -1,0 +1,88 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+	color: #C63131;
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	padding-top: 200px;
+	text-transform: uppercase;
+	text-align: center;
+}
+#wrapper {
+	height: 100%;
+	width: 550px;
+	margin: auto;
+}
+input[type='text'] {
+	width: 350px;
+	height: 18px;
+	border: 1px solid #777777;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 6px;
+	font-size: 10px;
+	padding: 2px 2px 2px 4px;
+}
+input[type='text']:focus {
+	background-color: #FFFBBD;
+	border: 1px solid #EB882C;
+}
+input[type='text']:hover {
+	background-color: #FFFA9F;
+	border: 1px solid #D86C08;
+}
+input[type='password'] {
+	width: 350px;
+	height: 18px;
+	border: 1px solid #777777;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 6px;
+	font-size: 10px;
+	padding: 2px 2px 2px 4px;
+}
+input[type='password']:focus {
+	background-color: #FFFBBD;
+	border: 1px solid #EB882C;
+}
+input[type='password']:hover {
+	background-color: #FFFA9F;
+	border: 1px solid #D86C08;
+}
+input[type='submit'] {
+	padding-bottom: 2px;
+	width: 50px;
+	height: 18px;
+	border: 1px solid #444444;
+	background-color: #666666;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	font-size: 10px;
+}
+input[type='submit']:hover {
+	background-color: #888888;
+}
+input[type='submit']:focus {
+	border: 0px;
+}
+input[name='custName'] {
+	width: 400px;
+}
+a:link, a:visited, a:active, a:hover {
+	font-family: Helvetica, Arial, sans-serif;
+	color: #970000;
+	font-size: 18px;
+	font-weight: bold;
+	text-transform: none;
+}
+#small {
+	font-size: 12px;
+}
+.extra {
+	padding-top: 2px;
+	font-size: 14px;
+	width: 100%;
+	min-height: 20px;
+	background-color: #F7F564;
+	border-bottom: 1px solid #E4E132;
+	border-top: 1px solid #E4E132;
+}
