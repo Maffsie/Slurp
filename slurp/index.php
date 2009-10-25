@@ -13,6 +13,10 @@ if(DB_HOST == 'Database_Host' && DB_USR == 'Database_Username' && DB_PASS == 'Da
 	header('Location: /install');
 	die();
 }
+if($url == 'sApi' && $_SERVER['HTTP_USER_AGENT'] == 'pySlurp') {
+	include('sApi.php');
+	die();
+}
 if($url == 'add') {
 	if($_POST['uploadInstead'] == 1 || $_POST['hType'] == 'file')
 		include('add2.php');
