@@ -22,6 +22,13 @@ function validate($val) {
 	else
 		return false;
 }
+function specialCheck($chk) {
+	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp');
+	if(array_key_exists(strtolower($chk),$arChk))
+		return false;
+	else
+		return true;
+}
 if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten']) && strlen($_POST['toShorten']) > 1)) {
 	$info = "";
 	//Init DB
@@ -38,6 +45,11 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 		} else {
 			$rgen = false;
 		}
+		if(!specialCheck($gen)) {
+			$info .= "The custom name you provided ($gen) is a 'special word', meaning you're not allowed to use it. A random URL has been generated instead.<br />";
+			$rgen = true;
+			$gen = generate();
+		}
 	}
 	$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 	if($c->num_rows > 0) {
@@ -49,7 +61,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 	//Guarantees that the URL provided will be unique
 	while(!$unique && $rgen) {
 		$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
-		if($g->num_rows > 0)
+		if($g->num_rows > 0 || !specialCheck($gen))
 			$gen = generate();
 		else
 			$unique = true;
@@ -61,7 +73,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 	if(!check($url)) {
 		$err = "Invalid URL - $url";
 	} else {
-		$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE notshort='$url'");
+		$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE notshort='$url'");1
 		if($c->num_rows > 0) {
 			$c = $c->fetch_assoc();
 			$gen = $c['short'];

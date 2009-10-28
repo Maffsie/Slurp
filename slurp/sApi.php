@@ -10,6 +10,13 @@ function generate() {
 	}
 	return $rtrn;
 }
+function specialCheck($chk) {
+	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp');
+	if(array_key_exists(strtolower($chk),$arChk))
+		return false;
+	else
+		return true;
+}
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 $u = $_POST['u'];
 $p = hash('whirlpool',$_POST['p']);
@@ -21,7 +28,7 @@ $unique = false;
 //Guarantees that the URL provided will be unique
 while(!$unique) {
 	$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
-	if($g->num_rows > 0)
+	if($g->num_rows > 0 || !specialCheck($gen))
 		$gen = generate();
 	else
 		$unique = true;

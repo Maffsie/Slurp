@@ -27,6 +27,13 @@ function fileValidate($fname) {
 	else
 		return true;
 }
+function specialCheck($chk) {
+	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp');
+	if(array_key_exists(strtolower($chk),$arChk))
+		return false;
+	else
+		return true;
+}
 if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) && $_FILES['fupld']['size'] > 0)) {
 	$info = "";
 	//Init DB
@@ -42,6 +49,11 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) 
 			$gen = generate();
 		} else {
 			$rgen = false;
+		}
+		if(!specialCheck($gen)) {
+			$info .= "The custom name you provided ($gen) is a 'special word', meaning you're not allowed to use it. A random URL has been generated instead.<br />";
+			$rgen = true;
+			$gen = generate();
 		}
 	}
 	$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");

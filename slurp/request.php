@@ -14,6 +14,13 @@ function generate() {
 	}
 	return $rtrn;
 }
+function specialCheck($chk) {
+	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp','root','owner','anon','anonymous','administrator');
+	if(array_key_exists(strtolower($chk),$arChk))
+		return false;
+	else
+		return true;
+}
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 	$uname = $_POST['reqUname'];
@@ -29,6 +36,8 @@ if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 		$err .= 'Username too short<br />';
 	if(strlen($uname) == 0)
 		$err .= 'No username provided!<br />';
+	if(!specialCheck($uname))
+		$err .= 'Username is forbidden!<br />';
 	if(strlen($whoAreYou) == 0)
 		$err .= 'You didn\'t say who you are!<br />';
 	if(strlen($email) == 0)
