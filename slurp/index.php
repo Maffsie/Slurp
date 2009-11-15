@@ -1,6 +1,7 @@
 <?php
-$url = str_replace('/','',$_SERVER['REQUEST_URI']);
-require_once('config.php');
+$url = str_replace('/','',$_SERVER['REQUEST_URI']); #Get base request data
+require_once('config.php'); #Initialise base system
+#'Special' URI request handling
 if($url == 'style.css') {
 	include('style.css');
 	die();
@@ -8,24 +9,29 @@ if($url == 'style.css') {
 if(file_exists('slurp/install.php') && $url == 'install') {
 	include('install.php');
 	die();
-}
+} #Theoretically this could throw itself into an infinite loop and/or simply crash, if the config was set to defaults, but the install file didn't exist.
 if(DB_HOST == 'Database_Host' && DB_USR == 'Database_Username' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name') {
 	header('Location: /install');
 	die();
 }
-if($url == 'sApi' && $_SERVER['HTTP_USER_AGENT'] == 'pySlurp') {
+if($url == 'sApi' && $_SERVER['HTTP_USER_AGENT'] == 'pySlurp') { #API handling. The API is half-coded and doesn't entirely work.
 	include('sApi.php');
 	die();
 }
 if($url == 'add') {
-	if($_POST['uploadInstead'] == 1 || $_POST['hType'] == 'file')
-		include('add2.php');
-	else
-		include('add.php');
+	include('add.php');
 	die();
 }
 if($url == 'upload') {
 	include('add2.php');
+	die();
+}
+if($url == 'files') {
+	include('lfiles.php');
+	die();
+}
+if(substr($url,0,6) == 'delete') {
+	include('delete.php');
 	die();
 }
 if($url == 'login') {

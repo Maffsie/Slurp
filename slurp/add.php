@@ -73,7 +73,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 	if(!check($url)) {
 		$err = "Invalid URL - $url";
 	} else {
-		$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE notshort='$url'");1
+		$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE notshort='$url'");
 		if($c->num_rows > 0) {
 			$c = $c->fetch_assoc();
 			$gen = $c['short'];
@@ -112,10 +112,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 				<input type='hidden' name='doWork' value='1' />
 				<input type='hidden' name='hType' value='url' />
 			</form><br />
-			<form action='' method='post'>
-				<input type='hidden' value='1' name='uploadInstead' />
-				<input type='submit' value='Upload a file?' />
-			</form>
+			<a href='/upload' id='small'>Upload a file?</a>
 		</div>
 	</body>
 </html>
@@ -145,10 +142,7 @@ if(isset($_POST['toShorten']) && strlen($_POST['toShorten']) == 0)
 				<input type='hidden' name='doWork' value='1' />
 				<input type='hidden' name='hType' value='url' />
 			</form><br />
-			<form action='' method='post'>
-				<input type='hidden' value='1' name='uploadInstead' />
-				<input type='submit' value='Upload?' />
-			</form>
+			<a href='/upload' id='small'>Upload a file?</a>
 		</div>
 	</body>
 </html>

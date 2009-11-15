@@ -1,5 +1,15 @@
 <?php
 $stage = $_POST['stageNum'];
+function generate($len) {
+	//Random number provided by rolling a die. Guaranteed to be random.
+	//return 4;
+	$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
+	$rtrn = '';
+	while(strlen($rtrn) < $len) {
+		$rtrn .= substr($chrs, rand(0, strlen($chrs) - 1), 1);
+	}
+	return $rtrn;
+}
 switch($stage) {
 	default:
 		?>
@@ -35,16 +45,6 @@ switch($stage) {
 		if(mysqli_connect_errno()) {
 			$err .= 'Could not connect to database. Error: '.mysqli_connect_error().'<br />';
 		} else {
-			function generate() {
-				//Random number provided by rolling a die. Guaranteed to be random.
-				//return 4;
-				$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
-				$rtrn = '';
-				while(strlen($rtrn) < 45) {
-					$rtrn .= substr($chrs, rand(0, strlen($chrs) - 1), 1);
-				}
-				return $rtrn;
-			}
 			$cfh = fopen('slurp/config.php','r');
 			while(!feof($cfh))
 				$conf .= fgets($cfh);
@@ -59,12 +59,12 @@ switch($stage) {
 			$conf = str_replace('Table_Main_Name',$prefix.'main',$conf);
 			$conf = str_replace('Table_Users_Name',$prefix.'users',$conf);
 			$conf = str_replace('Table_Temp_Name',$prefix.'tmp',$conf);
-			$conf = str_replace('Cookie_Data',generate(),$conf);
+			$conf = str_replace('Cookie_Data',generate(45),$conf);
 			fwrite($fh,$conf);
 			fclose($fh);
-			$q1 = $dbT->query("CREATE TABLE `".$prefix."main` (`short` text NOT NULL,`notshort` text NOT NULL,`isURL` int(1) NOT NULL,`filename` text) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+			$q1 = $dbT->query("CREATE TABLE `".$prefix."main` (`short` text NOT NULL,`notshort` text NOT NULL,`isURL` int(1) NOT NULL,`filename` text, `uCookie` varchar(64)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 			$q2 = $dbT->query("CREATE TABLE `".$prefix."tmp` (`tmpKey` varchar(20) NOT NULL,`uname` text NOT NULL,`passwd` varchar(128) NOT NULL,`mail` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-			$q3 = $dbT->query("CREATE TABLE `".$prefix."users` (`username` text NOT NULL,`password` varchar(128) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+			$q3 = $dbT->query("CREATE TABLE `".$prefix."users` (`username` text NOT NULL,`password` varchar(128) NOT NULL, `cookie_data` varchar(64) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 			if(!$q1 || !$q2 || !$q3) {
 				$err .= 'Could not create tables. Error: '.mysqli_error().'<br />Config file reset. Please try again :c<br />';
 				$fh = fopen('slurp/config.php','w');
@@ -192,7 +192,8 @@ switch($stage) {
 		if(!isset($err)) {
 			$uP = hash('whirlpool',$uP);
 			$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
-			$q = $db->query("INSERT INTO ".TB_USRS." (username, password) VALUES ('$uN', '$uP')");
+			$uC = generate(64);
+			$q = $db->query("INSERT INTO ".TB_USRS." (username, password, cookie_data) VALUES ('$uN', '$uP', '$uC')");
 			if(!$q)
 				$err .= 'Could not create user. MySQL said: '.mysqli_error().'<br />';
 		}

@@ -1,6 +1,14 @@
 <?php
 require_once('config.php');
-if(!isset($_COOKIE['uploadPermissions']) || $_COOKIE['uploadPermissions'] != COOKIE_DATA) {
+if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions'],0,45) != COOKIE_DATA) {
+	header('Location: /login');
+	die();
+}
+//Init DB
+$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
+$uCData = str_replace(COOKIE_DATA, '', $_COOKIE['uploadPermissions']);
+$qry = $db->query("SELECT * FROM users WHERE cookie_data = '$uCData'");
+if(strlen($uCData) == 0 || $qry->num_rows == 0) {
 	header('Location: /login');
 	die();
 }
@@ -28,7 +36,7 @@ function fileValidate($fname) {
 		return true;
 }
 function specialCheck($chk) {
-	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp');
+	$arChk = array('add','upload','stored','admin','login','logout', 'install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp');
 	if(array_key_exists(strtolower($chk),$arChk))
 		return false;
 	else
@@ -36,8 +44,6 @@ function specialCheck($chk) {
 }
 if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) && $_FILES['fupld']['size'] > 0)) {
 	$info = "";
-	//Init DB
-	$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 	if(strlen($_POST['custName']) == 0) {
 		$gen = generate();
 		$rgen = true;
@@ -78,7 +84,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) 
 			mkdir('stored');
 		$toGo = "stored/$gen";
 		move_uploaded_file($file,$toGo);
-		$q = $db->query("INSERT INTO ".TB_MAIN." (short, notshort, isURL, filename) VALUES ('$gen','$toGo', 2, '$orgname')");
+		$q = $db->query("INSERT INTO ".TB_MAIN." (short, notshort, isURL, filename, uCookie) VALUES ('$gen','$toGo', 2, '$orgname', '$uCData')");
 		if(!$q)
 			$err = "Could not upload file.";
 	} else
@@ -110,10 +116,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) 
 				<input type='hidden' name='doWork' value='1' />
 				<input type='hidden' name='hType' value='file' />
 			</form><br />
-			<form action='' method='post'>
-				<input type='hidden' value='0' name='uploadInstead' />
-				<input type='submit' value='Shorten?' />
-			</form>
+			<a href='/add' id='small'>Shorten a URL?</a> | <a href='/files' id='small'>View uploaded files?</a>
 		</div>
 	</body>
 </html>
@@ -140,10 +143,7 @@ if(isset($_FILES['fupld']) && strlen(basename($_FILES['fupld']['name'])) == 0)
 				<input type='hidden' name='doWork' value='1' />
 				<input type='hidden' name='hType' value='file' />
 			</form><br />
-			<form action='' method='post'>
-				<input type='hidden' value='0' name='uploadInstead' />
-				<input type='submit' value='Shorten?' />
-			</form>
+			<a href='/add' id='small'>Shorten a URL?</a> | <a href='/files' id='small'>View uploaded files?</a>
 		</div>
 	</body>
 </html>

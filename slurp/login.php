@@ -10,7 +10,8 @@ if($_POST['doLogin'] == 1) {
 	$pass = hash('whirlpool',$_POST['passwd']);
 	$q = $db->query("SELECT * FROM ".TB_USRS." WHERE username='$uname' AND password='$pass'");
 	if($q->num_rows == 1) {
-		setcookie('uploadPermissions',COOKIE_DATA,time()+60*60*24*365*2);
+		$q = $q->fetch_assoc();
+		setcookie('uploadPermissions',COOKIE_DATA.$q['cookie_data'],time()+60*60*24*365*2);
 		header('Location: /add');
 		die();
 	} else {

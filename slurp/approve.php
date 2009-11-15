@@ -2,6 +2,16 @@
 require_once('config.php');
 $key = str_replace('/approve/','',$_SERVER['REQUEST_URI']);
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
+function generate($len) {
+	//Random number provided by rolling a die. Guaranteed to be random.
+	//return 4;
+	$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
+	$rtrn = '';
+	while(strlen($rtrn) < $len) {
+		$rtrn .= substr($chrs, rand(0, strlen($chrs) - 1), 1);
+	}
+	return $rtrn;
+}
 if(strlen($key) < 20 || strlen($key) > 20) {
 	?>
 <html>
@@ -33,7 +43,8 @@ if(strlen($key) < 20 || strlen($key) > 20) {
 		<?php
 	} else {
 		$q = $q->fetch_assoc();
-		$r = $db->query("INSERT INTO ".TB_USRS." (username, password) VALUES ('{$q['uname']}', '{$q['passwd']}')");
+		$gen = generate(64);
+		$r = $db->query("INSERT INTO ".TB_USRS." (username, password, cookie_data) VALUES ('{$q['uname']}', '{$q['passwd']}', '$gen')");
 		$d = $db->query("DELETE FROM ".TB_TMP." WHERE tmpKey='$key'");
 		include('phpmailer.php');
 		$mail = new PHPMailer();
