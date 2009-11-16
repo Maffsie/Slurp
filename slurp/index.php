@@ -1,12 +1,16 @@
 <?php
 $url = str_replace('/','',$_SERVER['REQUEST_URI']); #Get base request data
-require_once('config.php'); #Initialise base system
-#'Special' URI request handling
 if($url == 'style.css') {
 	include('style.css');
 	die();
 }
-if(file_exists('slurp/install.php') && $url == 'install') {
+if
+if(!file_exists('slurp/config.php' && $url != 'install') {
+	header('Location: /install');
+	die();
+}
+require_once('config.php'); #Initialise base system
+#'Special' URI request handling(file_exists('slurp/install.php') && $url == 'install') {
 	include('install.php');
 	die();
 } #Theoretically this could throw itself into an infinite loop and/or simply crash, if the config was set to defaults, but the install file didn't exist.
