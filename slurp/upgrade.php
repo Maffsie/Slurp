@@ -5,16 +5,19 @@
 	</head>
 	<body>
 <?php
-if(!file_exists('slurp/config.php'))
-	$err .= "Slurp! isn't installed!<br />";
+#if(!file_exists('slurp/config.php'))
+#	$err .= "Slurp! isn't installed!<br />";
 
 if(!isset($err)) {
-	require_once('config.php');
+	#require_once('config.php');
 	#Begin DB upgrade
 	echo "<span id='small'><ul>";
 	echo "<li>Connecting to database</li>";
-	$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
+	#$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
+	$db = new mysqli('localhost','root','','slurp');
 	echo "<li>DB connection successful.</li>";
 	echo "<li>Checking users table</li>";
-	$uFlds = $db->query("SHOW COLUMNS FROM ".TB_USRS);
+	$uFlds = $db->query("SHOW COLUMNS FROM users");
 	$uFlds = $uFlds->fetch_assoc();
+	var_dump($uFlds);
+}

@@ -87,7 +87,7 @@ CONF;
 			$conf = str_replace('Cookie_Data',generate(45),$conf);
 			fwrite($fh,$conf);
 			fclose($fh);
-			$q1 = $dbT->query("CREATE TABLE `".$prefix."main` (`short` text NOT NULL,`notshort` text NOT NULL,`isURL` int(1) NOT NULL,`filename` text, `uCookie` varchar(64)) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+			$q1 = $dbT->query("CREATE TABLE `".$prefix."main` (`short` text NOT NULL,`notshort` text NOT NULL,`isURL` int(1) NOT NULL,`filename` text, `uCookie` varchar(64) NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 			$q2 = $dbT->query("CREATE TABLE `".$prefix."tmp` (`tmpKey` varchar(20) NOT NULL,`uname` text NOT NULL,`passwd` varchar(128) NOT NULL,`mail` text NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 			$q3 = $dbT->query("CREATE TABLE `".$prefix."users` (`username` text NOT NULL,`password` varchar(128) NOT NULL, `cookie_data` varchar(64) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 			if(!$q1 || !$q2 || !$q3) {

@@ -11,3 +11,4 @@
 16/10/2009: Added content-length header to return correct filesize of the file being downloaded
 16/10/2009: Added an /upload for immediate file uploading
 24/10/2009: Added an installer and a fresh-install check.
+16/11/2009: Major upgrades to the fresh-install check, added an upgrader, file listing and deletion facility.

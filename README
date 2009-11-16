@@ -1,7 +1,8 @@
-Slurp! v0.2a (Prerelease Alpha)
+Slurp! v0.3a (Prerelease Alpha)
 Slurp! is a URL shortener and file upload service. It is installable pretty much anywhere that wordpress is.
 Slurp! uses PHPMailer to send emails.
 
+Update (16 Nov '09): Slurp! now includes an upgrader, which suddenly became necessary after adding a new feature altered the tables and fields Slurp needed to operate.
 Update (24 Oct '09): Slurp! now includes an installer to do initial configuration.
 
 You'll need:

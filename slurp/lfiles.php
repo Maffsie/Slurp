@@ -7,7 +7,7 @@ if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions']
 //Init DB
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 $uCData = str_replace(COOKIE_DATA, '', $_COOKIE['uploadPermissions']);
-$qry = $db->query("SELECT * FROM users WHERE cookie_data = '$uCData'");
+$qry = $db->query("SELECT * FROM ".TB_USRS." WHERE cookie_data = '$uCData'");
 if(strlen($uCData) == 0 || $qry->num_rows == 0) {
 	header('Location: /login');
 	die();
@@ -30,20 +30,23 @@ function niceSize($int) {
 	$int = round($int / 1024, 2);
 	return "$int gb";
 }
-while($instance = $fL->fetch_assoc()) {
-	$fsize = niceSize(filesize($instance['notshort']));
-	$uDet = $db->query("SELECT * FROM users WHERE cookie_data = '{$instance['uCookie']}'");
-	if($uDet->num_rows == 0)
-		$username = "unknown";
-	else {
-		$uDet = $uDet->fetch_assoc();
-		$username = $uDet['username'];
+if($fL->num_rows > 0) {
+	while($instance = $fL->fetch_assoc()) {
+		$fsize = niceSize(filesize($instance['notshort']));
+		$uDet = $db->query("SELECT * FROM users WHERE cookie_data = '{$instance['uCookie']}'");
+		if($uDet->num_rows == 0)
+			$username = "unknown";
+		else {
+			$uDet = $uDet->fetch_assoc();
+			$username = $uDet['username'];
+		}
+		$out .= "<a href=\"/{$instance['short']}\" id='small'>{$instance['filename']}</a> ($fsize) - Uploaded by $username";
+		if($instance['uCookie'] == $uCData)
+			$out .= " - <a href=\"/delete/{$instance['short']}\" id='small'>Delete?</a>";
+		$out .= "<br />\n\t\t\t";
 	}
-	$out .= "<a href=\"/{$instance['short']}\" id='small'>{$instance['filename']}</a> ($fsize) - Uploaded by $username";
-	if($instance['uCookie'] == $uCData)
-		$out .= " - <a href=\"/delete/{$instance['short']}\" id='small'>Delete?</a>";
-	$out .= "<br />\n\t\t\t";
-}
+} else
+	$out = "No files have been uploaded.<br />\n\t\t\t";
 ?>
 <html>
 	<head>

@@ -4,20 +4,16 @@ if($url == 'style.css') {
 	include('style.css');
 	die();
 }
-if
 if(!file_exists('slurp/config.php' && $url != 'install') {
 	header('Location: /install');
 	die();
 }
-require_once('config.php'); #Initialise base system
-#'Special' URI request handling(file_exists('slurp/install.php') && $url == 'install') {
+if(file_exists('slurp/install.php') && $url == 'install') {
 	include('install.php');
 	die();
 } #Theoretically this could throw itself into an infinite loop and/or simply crash, if the config was set to defaults, but the install file didn't exist.
-if(DB_HOST == 'Database_Host' && DB_USR == 'Database_Username' && DB_PASS == 'Database_Password' && DB_NAME == 'Database_Name') {
-	header('Location: /install');
-	die();
-}
+require_once('config.php'); #Initialise base system
+#'Special' URI request handling
 if($url == 'sApi' && $_SERVER['HTTP_USER_AGENT'] == 'pySlurp') { #API handling. The API is half-coded and doesn't entirely work.
 	include('sApi.php');
 	die();
@@ -62,7 +58,7 @@ if($q->num_rows == 0) {
 		header("HTTP/1.1 301 Moved Permanently");
 		header("Location: $go");
 		unset($go);
-	} else {
+	} elseif($q['isURL'] == 2) {
 		unset($db, $url);
 		header('Content-Length: '.filesize($go));
 		$mime = getimagesize($go);
@@ -75,6 +71,21 @@ if($q->num_rows == 0) {
 		}
 		readfile($go);
 		unset($go);
+		die();
+	} elseif($q['isURL'] == 3) {
+		?>
+<html>
+	<head>
+		<title>File Deleted</title>
+		<link rel='stylesheet' href='/style.css' />
+	</head>
+	<body>
+		<div id='wrapper'>
+			<h1>Sorry, but this file has been deleted by it's owner.</h1>
+		</div>
+	</body>
+</html>
+		<?php
 		die();
 	}
 }
