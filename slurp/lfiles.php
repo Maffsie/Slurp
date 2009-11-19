@@ -31,6 +31,7 @@ function niceSize($int) {
 	return "$int gb";
 }
 if($fL->num_rows > 0) {
+	$totSize = 0;
 	while($instance = $fL->fetch_assoc()) {
 		$fsize = niceSize(filesize($instance['notshort']));
 		$uDet = $db->query("SELECT * FROM users WHERE cookie_data = '{$instance['uCookie']}'");
@@ -40,11 +41,13 @@ if($fL->num_rows > 0) {
 			$uDet = $uDet->fetch_assoc();
 			$username = $uDet['username'];
 		}
+		$totSize += filesize($instance['notshort']);
 		$out .= "<a href=\"/{$instance['short']}\" id='small'>{$instance['filename']}</a> ($fsize) - Uploaded by $username";
 		if($instance['uCookie'] == $uCData)
 			$out .= " - <a href=\"/delete/{$instance['short']}\" id='small'>Delete?</a>";
 		$out .= "<br />\n\t\t\t";
 	}
+	$totSize = niceSize($totSize);
 } else
 	$out = "No files have been uploaded.<br />\n\t\t\t";
 ?>
@@ -57,5 +60,6 @@ if($fL->num_rows > 0) {
 		<h1>List of all files uploaded</h1>
 		<span id='small'>
 			<?php echo $out; ?></span>
+		<h2>Total file size of all files: <?php echo $totSize; ?></h2>
 	</body>
 </html>
