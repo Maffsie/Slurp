@@ -51,7 +51,14 @@ if(!isset($err)) {
 		$cCount++;
 		echo "<li>Main table successfully upgraded</li>\n\t\t\t\t";
 	}
-	echo "<li><b>Upgrade completed successfully - Changes made: $cCount</b></li>\n\t\t\t";
+	echo "<li>Checking if installer exists...</li>\n\t\t\t\t";
+	if(file_exists('slurp/install.php')) {
+		echo "<li>Installer found. Deleting installer...</li>\n\t\t\t\t";
+		unlink('slurp/install.php');
+		"<li>Installer deleted.</li>\n\t\t\t\t";
+	} else
+		echo "<li>Installer doesn't exist. Continuing...</li>\n\t\t\t\t";
+	echo "<li><b>Upgrade completed successfully - Changes made to database: $cCount</b></li>\n\t\t\t";
 	echo "</div></ul></span>\n";
 }
 ?>
