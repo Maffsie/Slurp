@@ -46,7 +46,7 @@ if($fL->num_rows > 0) {
 	$totSize = 0;
 	while($instance = $fL->fetch_assoc()) {
 		$fsize = niceSize(filesize($instance['notshort']));
-		$uDet = $db->query("SELECT * FROM users WHERE cookie_data = '{$instance['uCookie']}'");
+		$uDet = $db->query("SELECT * FROM ".TB_USRS." WHERE cookie_data = '{$instance['uCookie']}'");
 		if($uDet->num_rows == 0)
 			$username = "unknown";
 		else {
