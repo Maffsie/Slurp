@@ -4,7 +4,7 @@ if($url == 'style.css') {
 	include('style.css');
 	die();
 }
-if(!file_exists('slurp/config.php' && $url != 'install') {
+if(!file_exists('slurp/config.php') && $url != 'install') {
 	header('Location: /install');
 	die();
 }
@@ -12,9 +12,13 @@ if(file_exists('slurp/install.php') && $url == 'install') {
 	include('install.php');
 	die();
 } #Theoretically this could throw itself into an infinite loop and/or simply crash, if the config was set to defaults, but the install file didn't exist.
+if(file_exists('slurp/upgrade.php') && $url == 'upgrade') {
+	include('upgrade.php');
+	die();
+}
 require_once('config.php'); #Initialise base system
 #'Special' URI request handling
-if($url == 'sApi' && $_SERVER['HTTP_USER_AGENT'] == 'pySlurp') { #API handling. The API is half-coded and doesn't entirely work.
+if($url == 'sApi' && $_SERVER['HTTP_USER_AGENT'] == 'pySlurp') { #API handling. The API is half-coded and (probably) doesn't entirely work. It's never been tested.
 	include('sApi.php');
 	die();
 }

@@ -78,7 +78,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) 
 			$unique = true;
 	}
 	$file = $_FILES['fupld']['tmp_name'];
-	$orgname = str_replace(' ','_',basename($_FILES['fupld']['name']));
+	$orgname = basename($_FILES['fupld']['name']);
 	if(fileValidate($orgname)) {
 		if(!file_exists('stored'))
 			mkdir('stored');

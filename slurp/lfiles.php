@@ -12,7 +12,7 @@ if(strlen($uCData) == 0 || $qry->num_rows == 0) {
 	header('Location: /login');
 	die();
 }
-$fL = $db->query("SELECT * FROM main WHERE isURL = 2");
+$fL = $db->query("SELECT * FROM ".TB_MAIN." WHERE isURL = 2");
 function niceSize($int) {
 	if($int < 1024) {
 		if($int == 1)
