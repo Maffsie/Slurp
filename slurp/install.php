@@ -251,7 +251,7 @@ CONF;
 				<body>
 					<div id='wrapper'>
 						<h1>User account created!</h1>
-						Click below to delete this install file and log in. <span id='small'>It's recommended that the install file is deleted, for security purposes.</span><br />
+						Click below to delete this installer and log in. <span id='small'>It's recommended that the installer is deleted, for security purposes.</span><br />
 						<form action='' method='post'>
 							<input type='hidden' name='stageNum' value='complete' />
 							<input type='submit' value='Login!' />
@@ -264,6 +264,7 @@ CONF;
 		break;
 	case 'complete':
 		unlink('slurp/install.php');
+		unlink('slurp/upgrade.php');
 		header('Location: /login');
 		break;
 }

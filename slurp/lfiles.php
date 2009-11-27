@@ -30,6 +30,18 @@ function niceSize($int) {
 	$int = round($int / 1024, 2);
 	return "$int gb";
 }
+if(isset($_POST['doSearch']) && strlen($_POST['searchQry']) > 0) {
+	$srch = true;
+	$srchTrm = $_POST['searchQry'];
+	$sC = 0;
+} else
+	$srch = false;
+function search($term,$str) {
+	if(strpos(strtolower($str),strtolower($term)) !== false)
+		return true;
+	else
+		return false;
+}
 if($fL->num_rows > 0) {
 	$totSize = 0;
 	while($instance = $fL->fetch_assoc()) {
@@ -41,25 +53,41 @@ if($fL->num_rows > 0) {
 			$uDet = $uDet->fetch_assoc();
 			$username = $uDet['username'];
 		}
-		$totSize += filesize($instance['notshort']);
-		$out .= "<a href=\"/{$instance['short']}\" id='small'>{$instance['filename']}</a> ($fsize) - Uploaded by $username";
-		if($instance['uCookie'] == $uCData)
-			$out .= " - <a href=\"/delete/{$instance['short']}\" id='small'>Delete?</a>";
-		$out .= "<br />\n\t\t\t";
+		if(!$srch || ($srch && (search($srchTrm,$instance['filename']) || search($srchTrm,$username)))) {
+			$totSize += filesize($instance['notshort']);
+			$out .= "<a href=\"/{$instance['short']}\" id='small'>{$instance['filename']}</a> ($fsize) - Uploaded by $username";
+			if($instance['uCookie'] == $uCData)
+				$out .= " - <a href=\"/delete/{$instance['short']}\" id='small'>Delete?</a>";
+			$out .= "<br />\n\t\t\t";
+			if($srch)
+				$sC++;
+		}
 	}
+	if($sC == 0 && $srch)
+		$out = "No files matched your search query ($srchTrm)<br />\n\t\t\t";
 	$totSize = niceSize($totSize);
 } else
 	$out = "No files have been uploaded.<br />\n\t\t\t";
+if(!$srch)
+	$title = "List of files uploaded";
+else
+	$title = "Searching files uploaded for $srchTrm ($sC results)";
 ?>
 <html>
 	<head>
-		<title>List of files uploaded - Slurp</title>
+		<title><?php echo $title; ?> - Slurp</title>
 		<link rel="stylesheet" href="/style.css" />
 	</head>
 	<body>
-		<h1>List of all files uploaded</h1>
+		<h1><?php echo $title; ?></h1>
 		<span id='small'>
 			<?php echo $out; ?></span>
 		<h2>Total file size of all files: <?php echo $totSize; ?></h2>
+		<h3>Search files?</h3>
+		<form action='' method='post'>
+			<input type='hidden' name='doSearch' value='1' />
+			<input type='text' name='searchQry' />&nbsp;
+			<input type='submit' value='Search' />
+		</form>
 	</body>
 </html>
