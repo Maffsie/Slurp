@@ -2,6 +2,7 @@ Slurp! v0.3a (Prerelease Alpha)
 Slurp! is a URL shortener and file upload service. It is installable pretty much anywhere that wordpress is.
 Slurp! uses PHPMailer to send emails.
 
+Update (28 Nov '09): Slurp! now has a bulk-download facility accessabile within the file listing search facility. This uses the ZipFile compression class found here: http://www.devco.net/archives/2005/05/24/creating_zip_files_with_php.php
 Update (16 Nov '09): Slurp! now includes an upgrader, which suddenly became necessary after adding a new feature altered the tables and fields Slurp needed to operate.
 Update (24 Oct '09): Slurp! now includes an installer to do initial configuration.
 
