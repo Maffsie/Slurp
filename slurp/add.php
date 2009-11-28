@@ -23,7 +23,7 @@ function validate($val) {
 		return false;
 }
 function specialCheck($chk) {
-	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp');
+	$arChk = array('add','upload','stored','admin','login','logout','install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp','zip');
 	if(array_key_exists(strtolower($chk),$arChk))
 		return false;
 	else

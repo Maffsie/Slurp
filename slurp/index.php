@@ -50,6 +50,10 @@ if(substr($url,0,7) == 'approve') {
 	include('approve.php');
 	die();
 }
+if($url == 'zip') {
+	include('zipfiles.php');
+	die();
+}
 //Init DB
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
 $q = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$url'");
@@ -85,7 +89,7 @@ if($q->num_rows == 0) {
 	</head>
 	<body>
 		<div id='wrapper'>
-			<h1>Sorry, but this file has been deleted by it's owner.</h1>
+			<h1>Sorry, but this file has been deleted by its owner.</h1>
 		</div>
 	</body>
 </html>

@@ -1,4 +1,7 @@
 <?php
+session_start();
+if(isset($_SESSION['zFiles']))
+	unset($_SESSION['zFiles']);
 require_once('config.php');
 if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions'],0,45) != COOKIE_DATA) {
 	header('Location: /login');
@@ -59,12 +62,16 @@ if($fL->num_rows > 0) {
 			if($instance['uCookie'] == $uCData)
 				$out .= " - <a href=\"/delete/{$instance['short']}\" id='small'>Delete?</a>";
 			$out .= "<br />\n\t\t\t";
-			if($srch)
+			if($srch) {
 				$sC++;
+				$_SESSION['zFiles'][] = $instance['short'];
+			}
 		}
 	}
-	if($sC == 0 && $srch)
+	if($sC == 0 && $srch) {
 		$out = "No files matched your search query ($srchTrm)<br />\n\t\t\t";
+		$srch = false;
+	}
 	$totSize = niceSize($totSize);
 } else
 	$out = "No files have been uploaded.<br />\n\t\t\t";
@@ -83,6 +90,7 @@ else
 		<span id='small'>
 			<?php echo $out; ?></span>
 		<h2>Total file size of all files: <?php echo $totSize; ?></h2>
+		<?php if($srch) { ?><span id='small'><a href='/zip'>Download all files</a></span><?php } ?>
 		<h3>Search files?</h3>
 		<form action='' method='post'>
 			<input type='hidden' name='doSearch' value='1' />
