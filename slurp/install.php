@@ -214,11 +214,12 @@ CONF;
 			$err .= 'Password too short!<br />';
 		if(!isset($err)) {
 			$uP = hash('whirlpool',$uP);
-			$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
-			$uC = generate(64);
-			$q = $db->query("INSERT INTO ".TB_USRS." (username, password, cookie_data) VALUES ('$uN', '$uP', '$uC')");
-			if(!$q)
-				$err .= 'Could not create user. MySQL said: '.mysqli_error().'<br />';
+		require_once('config.php');
+		$db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
+		$uC = generate(64);
+		$q = $db->query("INSERT INTO ".TB_USRS." (username, password, cookie_data) VALUES ('$uN', '$uP', '$uC')");
+		if(!$q)
+			$err .= 'Could not create user. MySQL said: '.mysqli_error().'<br />';
 		}
 		if(isset($err)) {
 			?>
