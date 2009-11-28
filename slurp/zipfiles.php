@@ -13,8 +13,12 @@ if(strlen($uCData) == 0 || $qry->num_rows == 0) {
 	header('Location: /login');
 	die();
 }
+if(!isset($_SESSION['zFiles']) || count($_SESSION['zFiles']) == 0) {
+	header('Location: /files');
+	die();
+}
 $fn = "stored/".time().".zip";
-$zip = new ZipArchive;
+$zip = new ZipArchive;	
 $zh = $zip->open($fn, ZipArchive::CREATE);
 if($zh === true) {
 	foreach($_SESSION['zFiles'] as $short) {
