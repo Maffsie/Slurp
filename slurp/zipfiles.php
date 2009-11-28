@@ -13,7 +13,7 @@ if(strlen($uCData) == 0 || $qry->num_rows == 0) {
 	header('Location: /login');
 	die();
 }
-$fn = time().".zip";
+$fn = "stored/".time().".zip";
 $zip = new ZipArchive;
 $zh = $zip->open($fn, ZipArchive::CREATE);
 if($zh === true) {
