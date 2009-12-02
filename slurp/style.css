@@ -15,6 +15,9 @@ body {
 	margin: auto;
 }
 input[type='text'] {
+	text-transform: none; !important
+}
+input[type='text'] {
 	width: 350px;
 	height: 18px;
 	border: 1px solid #777777;
