@@ -11,7 +11,7 @@ function generate() {
 	return $rtrn;
 }
 function check($chk) {
-	if(preg_match('/^(http|https|sftp|ftp):\/\/(w{3}\.)?(([\w-]+)\.([a-z]{2,10}))+([\w\.\?&_\/=%-]+)*\b/i', $chk))
+	if(preg_match('/^(http|https|sftp|ftp):\/\/(w{3}\.)?(([\w-]+)\.([a-z]{2,10}))+([\w\.\?&_\/=%-\[\]\+#]+)*\b/i', $chk))
 		return true;
 	else
 		return false;
