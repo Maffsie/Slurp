@@ -65,9 +65,10 @@ define('BASE_URL','Base_Site_URL'); #Base URL of your site. This should, ideally
 
 
 //Mailer and registration settings
-define('REG_APP',false); #Enable or disable manual registration approving
+define('REG_ENABLE',Registration_Enable); #Enable or disable registrations altogether
+define('REG_APP',Registration_Approve); #Enable or disable manual registration approving
 define('SMTP_HOST','SMTP_Host'); #SMTP Host
-define('SMTP_PORT',25); #SMTP Port, leave this as it is unless you know it should be different.
+define('SMTP_PORT',SMTP_Port); #SMTP Port, leave this as it is unless you know it should be different.
 define('SMTP_FROM','SMTP_From_Address'); #Email address to send from
 define('SMTP_FROMNAME','SMTP_From_Friendly_Name'); #'Friendly' name for this email address
 define('SMTP_AUTH',false); #Whether to use authentication or not
@@ -163,6 +164,14 @@ CONF;
 						<form action='' method='post'>
 							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
 							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value='<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>' /><br />
+							<h2>Mail settings</h2>
+							<span id='small'>Enable registrations? <input type='checkbox' name='reg_enable' /></span><br />
+							<span id='small'><abbr title="Checking this will send an email to you whenever someone requests an account, and you can approve it. Uncheck this to allow anyone to create accounts. Users must have an account to upload files.">Enforce registration approval?</abbr> <input type='checkbox' name='reg_app' /></span>
+							<span id='small'>Mail server? <input type='text' name='mail_serv' /></span><br />
+							<span id='small'>SMTP port? <input type='text' name='mail_port' value='25' /></span><br />
+							<span id='small'>Address to send from? <input type='text' name='mail_fromaddr' value='noreply@example.com' /></span><br />
+							<span id='small'>Your email address? <input type='text' name='mail_addr' /></span><br />
+							<span id='small'>Your name? <input type='text' name='mail_name' /></span><br />
 							<input type='hidden' name='stageNum' value='extraSetup' />
 							<input type='submit' value='Go!' />
 						</form>
@@ -177,6 +186,20 @@ CONF;
 			$fh = fopen('slurp/config.php','w');
 			$conf = str_replace('URL_Length',$urlLen,$conf);
 			$conf = str_replace('Base_Site_URL',$baseD,$conf);
+			if($_POST['reg_enable'])
+				$conf = str_replace('Registration_Enable','true',$conf);
+			else
+				$conf = str_replace('Registration_Enable','false',$conf);
+			if($_POST['reg_app'])
+				$conf = str_replace('Registration_Approve','true',$conf);
+			else
+				$conf = str_replace('Registration_Approve','false',$conf);
+			$conf = str_replace('SMTP_Host',$_POST['mail_serv'],$conf);
+			$conf = str_replace('SMTP_Port',$_POST['mail_port'],$conf);
+			$conf = str_replace('SMTP_From_Address',$_POST['mail_fromaddr'],$conf);
+			$conf = str_replace('SMTP_From_Friendly_Name','SlurpBot',$conf);
+			$conf = str_replace('SMTP_Owner_Email',$_POST['mail_addr'],$conf);
+			$conf = str_replace('SMTP_Owner_Name',$_POST['mail_name'],$conf);
 			fwrite($fh,$conf);
 			fclose($fh);
 			?>
@@ -188,6 +211,7 @@ CONF;
 				<body>
 					<div id='wrapper'>
 						<h1>Extra configuration complete!</h1>
+						<h2>You may need to edit the configuration further if your mail server requires authentication</h2>
 						Set up your user account<br />
 						<form action='' method='post'>
 							<span id='small'>Username: </span><input type='text' name='uName' /><br />
