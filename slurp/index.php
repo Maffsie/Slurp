@@ -70,7 +70,8 @@ if($q->num_rows == 0) {
 		unset($db, $url);
 		header('Content-Length: '.filesize($go));
 		$mime = getimagesize($go);
-		header("Content-Disposition: filename={$q['filename']}");
+		if($mime) $attn = ""; else $attn = " attachment;";
+		header("Content-Disposition:$attn filename={$q['filename']}");
 		unset($s);
 		if($mime) {
 			header("Content-Type: {$mime['mime']}");
