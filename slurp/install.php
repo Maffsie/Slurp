@@ -1,5 +1,8 @@
 <?php
-$stage = $_POST['stageNum'];
+if(isset($_POST['stageNum']))
+	$stage = $_POST['stageNum'];
+else
+	$stage = '';
 function generate($len) {
 	//Random number provided by rolling a die. Guaranteed to be random.
 	//return 4;
@@ -109,7 +112,15 @@ CONF;
 						This is the second-last step!<br />
 						<form action='' method='post'>
 							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
-							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value='<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>' /><br />
+							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value="<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>" /><br />
+							<h2>Mail settings</h2>
+							<span id='small'>Enable registrations? <input type='checkbox' name='reg_enable' /></span><br />
+							<span id='small'><abbr title="Checking this will send an email to you whenever someone requests an account, and you can approve it. Uncheck this to allow anyone to create accounts. Users must have an account to upload files.">Enforce registration approval?</abbr> <input type='checkbox' name='reg_app' /></span><br />
+							<span id='small'>Mail server? <input type='text' name='mail_serv' /></span><br />
+							<span id='small'>SMTP port? <input type='text' name='mail_port' value='25' /></span><br />
+							<span id='small'>Address to send from? <input type='text' name='mail_fromaddr' value='noreply@example.com' /></span><br />
+							<span id='small'>Your email address? <input type='text' name='mail_addr' /></span><br />
+							<span id='small'>Your name? <input type='text' name='mail_name' /></span><br />
 							<input type='hidden' name='stageNum' value='extraSetup' />
 							<input type='submit' value='Go!' />
 						</form>
@@ -146,10 +157,29 @@ CONF;
 	case 'extraSetup':
 		$urlLen = (int) $_POST['urlLen'];
 		$baseD = $_POST['baseDomain'];
+		$regEnab = $_POST['reg_enable'];
+		$regApp = $_POST['reg_app'];
+		$mailSrv = $_POST['mail_serv'];
+		$mailPort = (int) $_POST['mail_port'];
+		$mailFAdd = $_POST['mail_fromaddr'];
+		$mailTAdd = $_POST['mail_addr'];
+		$mailTName = $_POST['mail_name'];
 		if(strlen($baseD) < 3)
-			$err .= 'Invalid base domain';
+			$err .= 'Invalid base domain<br />';
 		if(strlen($_POST['urlLen']) == 0)
-			$err .= 'URL length was not provided';
+			$err .= 'URL length was not provided<br />';
+		if($regApp) {
+			if(strlen($mailSrv)==0)
+				$err .= 'Mail server not provided<br />';
+			if($mailPort==0)
+				$err .= 'Mail server port not provided<br />';
+			if(strlen($mailFAdd)==0)
+				$err .= 'Mail Send-From address not provided<br />';
+			if(strlen($mailTAdd)==0)
+				$err .= 'Mail Send-To address not provided<br />';
+			if(strlen($mailTName)==0)
+				$err .= 'Mail Send-To Name was empty<br />'; 
+		}
 		if(isset($err)) {
 			?>
 			<html>
@@ -163,10 +193,10 @@ CONF;
 						<b>Error: </b><?php echo $err; ?><br />
 						<form action='' method='post'>
 							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
-							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value='<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>' /><br />
+							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value="<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>" /><br />
 							<h2>Mail settings</h2>
 							<span id='small'>Enable registrations? <input type='checkbox' name='reg_enable' /></span><br />
-							<span id='small'><abbr title="Checking this will send an email to you whenever someone requests an account, and you can approve it. Uncheck this to allow anyone to create accounts. Users must have an account to upload files.">Enforce registration approval?</abbr> <input type='checkbox' name='reg_app' /></span>
+							<span id='small'><abbr title="Checking this will send an email to you whenever someone requests an account, and you can approve it. Uncheck this to allow anyone to create accounts. Users must have an account to upload files.">Enforce registration approval?</abbr> <input type='checkbox' name='reg_app' /></span><br />
 							<span id='small'>Mail server? <input type='text' name='mail_serv' /></span><br />
 							<span id='small'>SMTP port? <input type='text' name='mail_port' value='25' /></span><br />
 							<span id='small'>Address to send from? <input type='text' name='mail_fromaddr' value='noreply@example.com' /></span><br />
@@ -181,25 +211,26 @@ CONF;
 			<?php
 		} else {
 			$cfh = fopen('slurp/config.php','r');
+			$conf = '';
 			while(!feof($cfh))
 				$conf .= fgets($cfh);
 			$fh = fopen('slurp/config.php','w');
 			$conf = str_replace('URL_Length',$urlLen,$conf);
 			$conf = str_replace('Base_Site_URL',$baseD,$conf);
-			if($_POST['reg_enable'])
+			if($regEnab)
 				$conf = str_replace('Registration_Enable','true',$conf);
 			else
 				$conf = str_replace('Registration_Enable','false',$conf);
-			if($_POST['reg_app'])
+			if($regApp)
 				$conf = str_replace('Registration_Approve','true',$conf);
 			else
 				$conf = str_replace('Registration_Approve','false',$conf);
-			$conf = str_replace('SMTP_Host',$_POST['mail_serv'],$conf);
-			$conf = str_replace('SMTP_Port',$_POST['mail_port'],$conf);
-			$conf = str_replace('SMTP_From_Address',$_POST['mail_fromaddr'],$conf);
+			$conf = str_replace('SMTP_Host',$mailSrv,$conf);
+			$conf = str_replace('SMTP_Port',$mailPort,$conf);
+			$conf = str_replace('SMTP_From_Address',$mailFAdd,$conf);
 			$conf = str_replace('SMTP_From_Friendly_Name','SlurpBot',$conf);
-			$conf = str_replace('SMTP_Owner_Email',$_POST['mail_addr'],$conf);
-			$conf = str_replace('SMTP_Owner_Name',$_POST['mail_name'],$conf);
+			$conf = str_replace('SMTP_Owner_Email',$mailTAdd,$conf);
+			$conf = str_replace('SMTP_Owner_Name',$mailTName,$conf);
 			fwrite($fh,$conf);
 			fclose($fh);
 			?>
