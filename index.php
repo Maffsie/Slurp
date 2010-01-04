@@ -34,7 +34,7 @@
 	<body>
 		<div id="container">
 			<h1>This is a completely inconspicuous web page.</h1>
-			<h2>Nobody would even know that hidden away, was <a href="/add">a URL shortener/File uploader</a>.</h2>
+			<h2>Nobody would even know that hidden away, was <a href='/add'>a URL shortener</a>/<a href='/upload'>File uploader</a>.</h2>
 		</div>
 	</body>
 </html>
