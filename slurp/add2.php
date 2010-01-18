@@ -1,16 +1,18 @@
 <?php
 require_once('config.php');
-if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions'],0,45) != COOKIE_DATA) {
-	header('Location: /login');
-	die();
-}
 //Init DB
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
-$uCData = str_replace(COOKIE_DATA, '', $_COOKIE['uploadPermissions']);
-$qry = $db->query("SELECT * FROM ".TB_USRS." WHERE cookie_data = '$uCData'");
-if(strlen($uCData) == 0 || $qry->num_rows == 0) {
-	header('Location: /login');
-	die();
+if(REG_ENABLE) {
+	if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions'],0,45) != COOKIE_DATA) {
+		header('Location: /login');
+		die();
+	}
+	$uCData = str_replace(COOKIE_DATA, '', $_COOKIE['uploadPermissions']);
+	$qry = $db->query("SELECT * FROM ".TB_USRS." WHERE cookie_data = '$uCData'");
+	if(strlen($uCData) == 0 || $qry->num_rows == 0) {
+		header('Location: /login');
+		die();
+	}
 }
 function generate() {
 	//Random number provided by rolling a die. Guaranteed to be random.
