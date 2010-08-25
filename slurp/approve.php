@@ -23,7 +23,7 @@ function generate($len) {
 	}
 	return $rtrn;
 }
-if(strlen($key) < 20 || strlen($key) > 20) {
+if(strlen($key) != 20) {
 	?>
 <html>
 	<head>

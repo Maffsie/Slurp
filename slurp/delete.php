@@ -30,17 +30,19 @@ else { #File exists, but the user might not be allowed to delete it.
 	if($q->num_rows == 0)
 		$err .= "You did not upload this file!";
 }
+?>
+			<h1><?php echo $err; ?></h1>
+<?php
 if(!isset($err)) {#File exists and user's authorised to delete it
-	$d = $db->query("DELETE FROM ".TB_MAIN." WHERE short='$key' AND isURL=2 AND uCookie='$uCData'"); #This could also be used to delete ShortURLs, but I won't write that capability to prevent entries from being accidentally deleted. Also there's this whole permalink thing which dictates that all links on the internet should remain valid.
+	$d = $db->query("DELETE FROM ".TB_MAIN." WHERE short='$key' AND isURL=2 AND uCookie='$uCData'"); #This could also be used to delete ShortURLs, but I won't write that capability to prevent entries from being accidentally deleted.
 	$p = $db->query("INSERT INTO ".TB_MAIN." (short, notshort, isURL) VALUES ('$key','',3)"); #Allows the system to display a File Deleted message, which is more helpful.
 	$q = $q->fetch_assoc();
 	unlink($q['notshort']);
 	?>
 			<h1>File successfully deleted.</h1>
 	<?php
-} else {
+}
 ?>
-			<h1><?php echo $err; ?></h1><?php } ?>
 		</div>
 	</body>
 </html>

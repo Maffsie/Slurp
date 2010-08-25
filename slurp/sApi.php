@@ -17,14 +17,36 @@ function specialCheck($chk) {
 	else
 		return true;
 }
+function logInfo($text) {
+	$text = "[".gmdate('d/m/y H:i:s')."] $text";
+	$handle = fopen("./apiLog.txt", 'a');
+	fwrite($handle, $text . "\n");
+	fclose($handle);
+}
+logInfo("Client connected.");
+logInfo("Checking POST data.");
+if($_POST['u'] == "" || $_POST['p'] == "" || $_POST['fupld'] == "")
+	die(header("HTTP/1.1 418 I'm A Teapot"));
+logInfo("Checking if file upload was successful.");
+$uploaded = base64_decode($_POST['fupld']);
+if(strlen($uploaded) == 0)
+	die(header("HTTP/1.1 400 Bad Request"));
+logInfo("File uploaded successfully, continuing.");
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
+logInfo("Connected to SQL database");
 $u = $_POST['u'];
 $p = hash('whirlpool',$_POST['p']);
+logInfo("Got user/pass: $u / $p");
 $chk = $db->query("SELECT * FROM ".TB_USRS." WHERE username='$u' AND password='$p'");
-if($chk->num_rows == 0)
+if($chk->num_rows != 1)
 	die(header('HTTP/1.1 403 Forbidden'));
+logInfo("Validated user.");
+logInfo("Retrieving cookie data for logged-in user");
+$chk = $chk->fetch_assoc();
+$uCData = $chk['cookie_data'];
 $gen = generate();
 $unique = false;
+logInfo("Generating shortURL for file {$_FILES['fupld']['name']}.");
 //Guarantees that the URL provided will be unique
 while(!$unique) {
 	$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
@@ -33,14 +55,18 @@ while(!$unique) {
 	else
 		$unique = true;
 }
-$filename = 'scrn_'.date('Gidmy').'.png';
+logInfo("Generated short url: $gen");
+$filename = 'scrn_'.time().'.png';
 $ufile = $gen;
 $servFile = "stored/$ufile";
-$fcont = $_POST['fupld'];
+$fcont = $uploaded;
 $fh = fopen("stored/$ufile",'w');
 fwrite($fh,$fcont);
 fclose($fh);
-$q = $db->query("INSERT INTO ".TB_MAIN." (short, notshort, isURL, filename) VALUES ('$ufile', '$servFile', '2', '$filename')");
-header('HTTP/1.1 200 OK');
-echo $ufile;
+logInfo("Wrote file to disk at location stored/$ufile");
+if($q = $db->query("INSERT INTO ".TB_MAIN." (short, notshort, isURL, filename, uCookie) VALUES ('$ufile', '$servFile', '2', '$filename', '$uCData')")) {
+	header('HTTP/1.1 200 OK');
+	echo $ufile;
+} else
+	header('HTTP/1.1 503 Service Unavailable');
 ?>

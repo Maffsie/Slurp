@@ -12,3 +12,12 @@
 16/10/2009: Added an /upload for immediate file uploading
 24/10/2009: Added an installer and a fresh-install check.
 16/11/2009: Major upgrades to the fresh-install check, added an upgrader, file listing and deletion facility.
+25/06/2010: Modified how the system authenticates (and checks for authentication) on pages.
+25/06/2010: Heavily altered the Slurp! API to work with any compliant client application (Appropriate HTTP responses for given data, logins and uploads actually work)
+25/06/2010: Modified Slurp! API to associate files uploaded through API with the user who uploaded them, as opposed to listing them as "Unknown"
+25/06/2010: Reworked the search engine code in the file listing
+25/06/2010: Rewrote Slurp! API to respond to malformed or nonsensical requests with an appropriately nonsensical (yet valid) HTTP response code (HTTP 418 I'm A Teapot)
+25/06/2010: Removed a small redundancy in the Registration Approval script.
+25/06/2010: Many other changes which I cannot remember.
+
+FOCUS FOR NEXT RELEASE: Adding the ability to shorten URLs through the Slurp! API.

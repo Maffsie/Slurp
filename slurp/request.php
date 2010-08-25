@@ -1,13 +1,23 @@
 <?php
 require_once('config.php');
+if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions'],0,45) != COOKIE_DATA) {
+	header('Location: /login');
+	die();
+}
 //Init DB
 $db = new mysqli(DB_HOST,DB_USR,DB_PASS,DB_NAME);
-function generate($n = 20) {
+$uCData = str_replace(COOKIE_DATA, '', $_COOKIE['uploadPermissions']);
+$qry = $db->query("SELECT * FROM ".TB_USRS." WHERE cookie_data = '$uCData'");
+if(strlen($uCData) == 0 || $qry->num_rows == 0) {
+	header('Location: /login');
+	die();
+}
+function generate() {
 	//Random number provided by rolling a die. Guaranteed to be random.
 	//return 4;
 	$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
 	$rtrn = '';
-	while(strlen($rtrn) < $n) {
+	while(strlen($rtrn) < 20) {
 		$rtrn .= substr($chrs, rand(0, strlen($chrs) - 1), 1);
 	}
 	return $rtrn;
@@ -19,7 +29,7 @@ function specialCheck($chk) {
 	else
 		return true;
 }
-if((isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) && REG_ENABLE) {
+if(isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) {
 	$uname = $_POST['reqUname'];
 	$passwd = hash('whirlpool',$_POST['reqPasswd']);
 	$whoAreYou = $_POST['doIKnowYou'];
@@ -35,11 +45,11 @@ if((isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) && REG_ENABLE) 
 		$err .= 'No username provided!<br />';
 	if(!specialCheck($uname))
 		$err .= 'Username is forbidden!<br />';
-	if(strlen($whoAreYou) == 0 && REG_APP)
+	if(strlen($whoAreYou) == 0)
 		$err .= 'You didn\'t say who you are!<br />';
-	if(strlen($email) == 0 && REG_APP)
+	if(strlen($email) == 0)
 		$err .= 'You didn\'t provide an email!<br />';
-	if(strlen($suppInfo) == 0 && REG_APP)
+	if(strlen($suppInfo) == 0)
 		$info .= 'You didn\'t give us any more information on who you are. This may affect whether we give you an account or not.<br />';
 	$q = $db->query("SELECT * FROM ".TB_USRS." WHERE username='$uname'");
 	if($q->num_rows != 0)
@@ -49,28 +59,22 @@ if((isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) && REG_ENABLE) 
 <html>
 	<head>
 		<link rel='stylesheet' href='style.css' />
-		<title><?php if(REG_APP && REG_ENABLE) { ?>Request an Account<?php } else if(REG_ENABLE) { ?>Create an account<?php } else { ?>Registrations Disable<?php } ?></title>
+		<title>Request an Account</title>
 	</head>
 	<body>
-		<?php if(REG_ENABLE) { ?>
 		<?php if(isset($err)&&$err!='') { ?><div class='extra'>Error: <?php echo $err; if(isset($info)&&$info!='') echo "<br /> Extra info: $info"; ?></div><?php } ?>
 		<div id='wrapper'>
-			<?php if(REG_APP) { ?>Request an Account<?php } else { ?>Create an account<?php } ?><br />
+			Request an Account<br />
 			<form action='' method='post'>
 				<span id='small'><abbr title='Must be longer than 4 characters'>Username</abbr>: </span><input type='text' name='reqUname' /><br />
 				<span id='small'><abbr title='Must be longer than 6 characters'>Password</abbr>: </span><input type='password' name='reqPasswd' /><br />
-				<?php if(REG_APP) { ?><span id='small'>Email address: </span><input type='text' name='email' /><br />
+				<span id='small'>Email address: </span><input type='text' name='email' /><br />
 				<span id='small'>Who are you? </span><input type='text' name='doIKnowYou' /><br />
 				<span id='small'>A little more info to convince us you're really you:</span><br />
-				<input type='text' name='extraInfo' /><br /><?php } ?>
+				<input type='text' name='extraInfo' /><br />
 				<input type='submit' value='Mmkay' />
 			</form>
 		</div>
-		<?php } else { ?>
-		<div id='wrapper'>
-			<h1>Registrations are disabled. Sorry!</h1>
-		</div>
-		<?php } ?>
 	</body>
 </html>
 		<?php
@@ -97,14 +101,13 @@ if((isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) && REG_ENABLE) 
 			$mail->IsHTML(true); // send as HTML
 			$mail->Send();
 		} else {
-			$cdata = generate(64);
-			$q = $db->query("INSERT INTO ".TB_USRS." (username, password, cookie_data) VALUES ('$uname', '$passwd', '$cdata')");
+			$q = $db->query("INSERT INTO ".TB_USRS." (username, password) VALUES ('$uname', '$passwd')");
 		}
 		?>
 <html>
 	<head>
 		<link rel='stylesheet' href='/style.css' />
-		<title><?php if(REG_APP) { ?>Request an Account<?php } else { ?>Create an account<?php } ?></title>
+		<title>Request an Account</title>
 	</head>
 	<body>
 		<div id='wrapper'>
@@ -116,14 +119,12 @@ if((isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) && REG_ENABLE) 
 	?>
 <html>
 	<head>
-		<link rel='stylesheet' href='style.css' />
-		<title><?php if(REG_APP && REG_ENABLE) { ?>Request an Account<?php } else if(REG_ENABLE) { ?>Create an account<?php } else { ?>Registrations Disable<?php } ?></title>
+		<link rel='stylesheet' href='/style.css' />
+		<title>Request an Account</title>
 	</head>
 	<body>
-		<?php if(REG_ENABLE) { ?>
-		<?php if(isset($err)&&$err!='') { ?><div class='extra'>Error: <?php echo $err; if(isset($info)&&$info!='') echo "<br /> Extra info: $info"; ?></div><?php } ?>
 		<div id='wrapper'>
-			<?php if(REG_APP) { ?>Request an Account<?php } else { ?>Create an account<?php } ?><br />
+			Request an Account<br />
 			<form action='' method='post'>
 				<span id='small'><abbr title='Must be longer than 4 characters'>Username</abbr>: </span><input type='text' name='reqUname' /><br />
 				<span id='small'><abbr title='Must be longer than 6 characters'>Password</abbr>: </span><input type='password' name='reqPasswd' /><br />
@@ -134,10 +135,5 @@ if((isset($_POST['reqUname']) && strlen($_POST['reqUname']) > 0) && REG_ENABLE) 
 				<input type='submit' value='Mmkay' />
 			</form>
 		</div>
-		<?php } else { ?>
-		<div id='wrapper'>
-			<h1>Registrations are disabled. Sorry!</h1>
-		</div>
-		<?php } ?>
 	</body>
 </html><?php } ?>
