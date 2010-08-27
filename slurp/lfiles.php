@@ -87,15 +87,15 @@ else
 	</head>
 	<body>
 		<h1><?php echo $title; ?></h1>
-		<span id='small'>
-			<?php echo $out; ?></span>
-		<h2>Total file size of all files: <?php echo $totSize; ?></h2>
-		<?php if($srch) { ?><span id='small'><a href='/zip'>Download all files</a></span><?php } ?>
 		<h3>Search files?</h3>
 		<form action='' method='post'>
 			<input type='hidden' name='doSearch' value='1' />
 			<input type='text' name='searchQry' />&nbsp;
 			<input type='submit' value='Search' />
 		</form>
+		<h2>Total file size of all files: <?php echo $totSize; ?></h2>
+		<?php if($srch) { ?><span id='small'><a href='/zip'>Download all files</a></span><?php } ?>
+		<span id='small'>
+			<?php echo $out; ?></span>
 	</body>
 </html>

@@ -18,7 +18,7 @@ if(file_exists('slurp/upgrade.php') && $url == 'upgrade') {
 }
 require_once('config.php'); #Initialise base system
 #'Special' URI request handling
-if($url == 'sApi') { #API handling. The API is half-coded and (probably) doesn't entirely work. It's never been tested.
+if(substr($url,0,4) == 'sApi') { #API handling.
 	include('sApi.php');
 	die();
 }
