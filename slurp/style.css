@@ -79,6 +79,7 @@ a:link, a:visited, a:active, a:hover {
 }
 #small {
 	font-size: 12px;
+	text-transform: uppercase !important;
 }
 .extra {
 	padding-top: 2px;

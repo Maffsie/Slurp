@@ -8,9 +8,10 @@ Update (28 Nov '09): Slurp! now has a bulk-download facility accessabile within 
 Update (16 Nov '09): Slurp! now includes an upgrader, which suddenly became necessary after adding a new feature altered the tables and fields Slurp needed to operate.
 Update (24 Oct '09): Slurp! now includes an installer to do initial configuration.
 Update (25 Aug '10): Slurp! now has its own API, which handles authenticated uploads (Currently written to handle all file uploads as PNG-encoded screenshots) and URL shortening via the use case http://small.co.ck/sApi?u=http://url.goes.here/okay
+Update (12 Sep '10): Slurp! now accepts base64-encoded strings in the URL shortening API.
 
 Known bugs:
-None
+URLs shortened via API without using base64 may not be complete.
 
 Notes:
 -Slurp! will display several notices during setup and everyday usage. This will be fixed soon.

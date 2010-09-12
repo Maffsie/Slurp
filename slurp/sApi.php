@@ -49,7 +49,14 @@ logInfo("Determining operations mode");
 switch($s_Shorten) {
 	case true:
 		logInfo("URL Shortening Mode");
-		$url = $_GET['u'];
+		logInfo("Checking for base64 mode");
+		if(isset($_GET['b64']) && $_GET['b64'] == 1) {
+			logInfo("base64 mode active.");
+			$url = base64_decode($_GET['u']);
+		} else {
+			logInfo("base64 mode not active.")
+			$url = $_GET['u'];
+		}
 		if(substr($url,0,7) != 'http://' && substr($url,0,8) != 'https://') {
 			$url = 'http://'.$url;
 		}

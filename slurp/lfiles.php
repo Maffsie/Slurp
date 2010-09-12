@@ -94,8 +94,8 @@ else
 			<input type='submit' value='Search' />
 		</form>
 		<h2>Total file size of all files: <?php echo $totSize; ?></h2>
-		<?php if($srch) { ?><span id='small'><a href='/zip'>Download all files</a></span><?php } ?>
+		<?php if($srch) { ?><span id='small'><a href='/zip'>Download all files</a></span><br /><?php } ?>
 		<span id='small'>
-			<?php echo $out; ?></span>
+			<?php echo $out; ?></span><br /><br />
 	</body>
 </html>
