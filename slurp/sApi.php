@@ -54,7 +54,7 @@ switch($s_Shorten) {
 			logInfo("base64 mode active.");
 			$url = base64_decode($_GET['u']);
 		} else {
-			logInfo("base64 mode not active.")
+			logInfo("base64 mode not active.");
 			$url = $_GET['u'];
 		}
 		if(substr($url,0,7) != 'http://' && substr($url,0,8) != 'https://') {
