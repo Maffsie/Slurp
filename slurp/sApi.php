@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('settings.php');
 define('DBG_LOGGING', false);
 if(isset($_GET['u']) && strlen($_GET['u']) > 0)
 	$s_Shorten = true;
@@ -79,7 +80,12 @@ switch($s_Shorten) {
 			//Guarantees that the URL provided will be unique
 			$unique = false;
 			$gen = generate();
+			$genc = 0;
+			//Guarantees that the URL provided will be unique
 			while(!$unique) {
+				$genc++;
+				if($genc > 65^URL_LEN) {
+					setconfig('URL_LEN', URL_LEN++);
 				$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 				if($g->num_rows > 0 || !specialCheck($gen))
 					$gen = generate();

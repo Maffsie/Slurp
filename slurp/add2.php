@@ -1,5 +1,6 @@
 <?php
 require_once('config.php');
+require_once('settings.php');
 if(!isset($_COOKIE['uploadPermissions']) || substr($_COOKIE['uploadPermissions'],0,45) != COOKIE_DATA) {
 	header('Location: /login');
 	die();
@@ -69,10 +70,14 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) 
 		$gen = generate();
 	}
 	$unique = false;
+	$genc = 0;
 	//Guarantees that the URL provided will be unique
-	while(!$unique && $rgen) {
+	while(!$unique) {
+		$genc++;
+		if($genc > 65^URL_LEN) {
+			setconfig('URL_LEN', URL_LEN++);
 		$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
-		if($g->num_rows > 0)
+		if($g->num_rows > 0 || !specialCheck($gen))
 			$gen = generate();
 		else
 			$unique = true;

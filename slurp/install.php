@@ -111,7 +111,7 @@ CONF;
 						<h1>Database setup complete!.</h1>
 						This is the second-last step!<br />
 						<form action='' method='post'>
-							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
+							<span id='small'>How long do you want your short URLs to be? This value is the INITIAL length of short-URLs. Once no more shortened URLs are available with that length, the value will be increased.</span><input type='text' name='urlLen' value='2' /><br />
 							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value="<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>" /><br />
 							<h2>Mail settings</h2>
 							<span id='small'>Enable registrations? <input type='checkbox' name='reg_enable' /></span><br />
