@@ -84,8 +84,8 @@ switch($s_Shorten) {
 			//Guarantees that the URL provided will be unique
 			while(!$unique) {
 				$genc++;
-				if($genc > 65^URL_LEN) {
-					setconfig('URL_LEN', URL_LEN++);
+				if($genc > (65^URL_LEN))
+					setconfig('URL_LEN', URL_LEN+1);
 				$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 				if($g->num_rows > 0 || !specialCheck($gen))
 					$gen = generate();
