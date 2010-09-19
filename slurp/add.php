@@ -1,12 +1,13 @@
 <?php
 require_once('config.php');
 require_once('settings.php');
+$urllen = URL_LEN;
 function generate() {
 	//Random number provided by rolling a die. Guaranteed to be random.
 	//return 4;
 	$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
 	$rtrn = '';
-	while(strlen($rtrn) < URL_LEN) {
+	while(strlen($rtrn) < $urllen) {
 		$rtrn .= substr($chrs, rand(0, strlen($chrs) - 1), 1);
 	}
 	return $rtrn;
@@ -39,21 +40,21 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 		$rgen = true;
 	} else {
 		$gen = $_POST['custName'];
-		if(!validate($gen)) {
+		if(!validate($gen) && !$rgen) {
 			$info .= "The custom name you provided ($gen) was not valid. A random URL has been generated for you instead.<br />";
 			$rgen = true;
 			$gen = generate();
 		} else {
 			$rgen = false;
 		}
-		if(!specialCheck($gen)) {
+		if(!specialCheck($gen) && !$rgen) {
 			$info .= "The custom name you provided ($gen) is a 'special word', meaning you're not allowed to use it. A random URL has been generated instead.<br />";
 			$rgen = true;
 			$gen = generate();
 		}
 	}
 	$c = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
-	if($c->num_rows > 0) {
+	if($c->num_rows > 0 && !$rgen) {
 		$info .= "The custom name you provided ($gen) is already in use. A random URL has been generated for you instead.<br />";
 		$rgen = true;
 		$gen = generate();
@@ -61,10 +62,11 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_POST['toShorten'
 	$unique = false;
 	$genc = 0;
 	//Guarantees that the URL provided will be unique
-	while(!$unique) {
+	while(!$unique && $rgen) {
 		$genc++;
-		if($genc > (65^URL_LEN))
-			setconfig('URL_LEN', URL_LEN+1);
+		if($genc > (65^$urllen))
+			setconfig('URL_LEN', $urllen+1);
+		$urllen++;
 		$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 		if($g->num_rows > 0 || !specialCheck($gen))
 			$gen = generate();

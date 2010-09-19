@@ -1,6 +1,7 @@
 <?php
 require_once('config.php');
 require_once('settings.php');
+$urllen = URL_LEN;
 define('DBG_LOGGING', false);
 if(isset($_GET['u']) && strlen($_GET['u']) > 0)
 	$s_Shorten = true;
@@ -11,7 +12,7 @@ function generate() {
 	//return 4;
 	$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
 	$rtrn = '';
-	while(strlen($rtrn) < URL_LEN) {
+	while(strlen($rtrn) < $urllen) {
 		$rtrn .= substr($chrs, rand(0, strlen($chrs) - 1), 1);
 	}
 	return $rtrn;
@@ -84,8 +85,9 @@ switch($s_Shorten) {
 			//Guarantees that the URL provided will be unique
 			while(!$unique) {
 				$genc++;
-				if($genc > (65^URL_LEN))
-					setconfig('URL_LEN', URL_LEN+1);
+				if($genc > (65^$urllen))
+					setconfig('URL_LEN', $urllen+1);
+				$urllen++;
 				$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 				if($g->num_rows > 0 || !specialCheck($gen))
 					$gen = generate();

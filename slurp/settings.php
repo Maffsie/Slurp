@@ -3,6 +3,8 @@
 #settings provider for Slurp!
 function setconfig($key, $value) {
 	$configfile = file_get_contents('slurp/config.php');
+	if(strlen($configfile) < 100)
+		return false;
 	if(!defined($key)) #Protect against screwing with the config
 		return false;
 	$const = get_defined_constants(true);
