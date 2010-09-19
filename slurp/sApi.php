@@ -7,7 +7,7 @@ if(isset($_GET['u']) && strlen($_GET['u']) > 0)
 	$s_Shorten = true;
 else
 	$s_Shorten = false;
-function generate() {
+function generate($urllen) {
 	//Random number provided by rolling a die. Guaranteed to be random.
 	//return 4;
 	$chrs = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-+";
@@ -80,7 +80,7 @@ switch($s_Shorten) {
 			logInfo("Generating Short URL.");
 			//Guarantees that the URL provided will be unique
 			$unique = false;
-			$gen = generate();
+			$gen = generate($urllen);
 			$genc = 0;
 			//Guarantees that the URL provided will be unique
 			while(!$unique) {
@@ -90,7 +90,7 @@ switch($s_Shorten) {
 				$urllen++;
 				$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 				if($g->num_rows > 0 || !specialCheck($gen))
-					$gen = generate();
+					$gen = generate($urllen);
 				else
 					$unique = true;
 			}
@@ -123,14 +123,14 @@ switch($s_Shorten) {
 		logInfo("Retrieving cookie data for logged-in user");
 		$chk = $chk->fetch_assoc();
 		$uCData = $chk['cookie_data'];
-		$gen = generate();
+		$gen = generate($urllen);
 		$unique = false;
 		logInfo("Generating shortURL for file {$_FILES['fupld']['name']}.");
 		//Guarantees that the URL provided will be unique
 		while(!$unique) {
 			$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 			if($g->num_rows > 0 || !specialCheck($gen))
-				$gen = generate();
+				$gen = generate($urllen);
 			else
 				$unique = true;
 		}
