@@ -1,0 +1,23 @@
+20/08/2009: Added an extra-info system to provide the user with extra information created during shortening.
+20/08/2009: Changed and improved CSS, added the ability to specify custom shortURL (a-la most URL shortening services), added a validator function for custom URLs. Added fallback code to prevent issues when a custom URL is already in use/isn't valid (reverts to randomly generated 4-character string).
+20/08/2009: Altered redirection code to include HTTP header 301 Moved Permanently
+11/10/2009: Complete overhaul, adding file uploads and generally improving the system.
+	-Changed DB name to reflect project name
+	-Added file uploads
+	-Added two extra fields in DB for determining type of entry, and file upload-specific 'filename' field. NULL by default.
+	-Removed redundant 'ID' field, wasn't being used.
+11/10/2009: Fixed some issues with the database, file storage and downloading, added a login system to prevent public access to the upload system. The public can still use the URL shortener though.
+15/10/2009: Fixed more issues with the database, added a table for username storage and temporary user approval. Will add a method for disapproving users later.
+16/10/2009: Added content-length header to return correct filesize of the file being downloaded
+16/10/2009: Added an /upload for immediate file uploading
+24/10/2009: Added an installer and a fresh-install check.
+16/11/2009: Major upgrades to the fresh-install check, added an upgrader, file listing and deletion facility.
+25/08/2010: Modified how the system authenticates (and checks for authentication) on pages.
+25/08/2010: Heavily altered the Slurp! API to work with any compliant client application (Appropriate HTTP responses for given data, logins and uploads actually work)
+25/08/2010: Modified Slurp! API to associate files uploaded through API with the user who uploaded them, as opposed to listing them as "Unknown"
+25/08/2010: Reworked the search engine code in the file listing
+25/08/2010: Rewrote Slurp! API to respond to malformed or nonsensical requests with an appropriately nonsensical (yet valid) HTTP response code (HTTP 418 I'm A Teapot)
+25/08/2010: Removed a small redundancy in the Registration Approval script.
+25/08/2010: Many other changes which I cannot remember.
+12/09/2010: Modified the output and styling of lfiles.php to accomodate the moved searchbar and Download All Files link
+12/09/2010: Added a new argument for sAPI, ?b64, which allows the URL shortener to take in a base64-encoded string. Only use is /sApi?b64=1&u=.... . Using ?b64=0 or anything else, will do nothing, thus it isn't mandatory.

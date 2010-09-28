@@ -1,0 +1,26 @@
+Slurp! v0.51
+Slurp! is a URL shortener and file upload service. It is installable pretty much anywhere that wordpress is.
+Slurp! uses PHPMailer to send emails.
+Slurp! has a compliant API which works with any software that Twitter For iPhone/Tweetie 2 works with (responds with URL shortening requests in a similar manner to TinyURL)
+
+Update (04 Jan '10): Slurp! now prompts for mail settings during setup.
+Update (28 Nov '09): Slurp! now has a bulk-download facility accessabile within the file listing search facility. This uses the ZipFile compression class found here: http://www.devco.net/archives/2005/05/24/creating_zip_files_with_php.php
+Update (16 Nov '09): Slurp! now includes an upgrader, which suddenly became necessary after adding a new feature altered the tables and fields Slurp needed to operate.
+Update (24 Oct '09): Slurp! now includes an installer to do initial configuration.
+Update (25 Aug '10): Slurp! now has its own API, which handles authenticated uploads (Currently written to handle all file uploads as PNG-encoded screenshots) and URL shortening via the use case http://small.co.ck/sApi?u=http://url.goes.here/okay
+Update (12 Sep '10): Slurp! now accepts base64-encoded strings in the URL shortening API.
+
+Known bugs:
+URLs shortened via API without using base64 may not be complete.
+
+Notes:
+-Slurp! will display several notices during setup and everyday usage. This will be fixed soon.
+-The mailer code currently doesn't support servers with encryption. A patch for this is in the works.
+-Slurp! API is not fully tested, and as such includes an option to log every event (just set the DBG_LOGGING definition at the top of sApi.php to 'true'). This is disabled by default, but when enabled will write every event (including a timestamp) to the file 'apiLog.txt' in the script's working directory (usually the root htdocs folder)
+
+You'll need:
+A webserver supporting PHP 4.3 or newer (only tested in 5.0)
+The PHP extension mysqli installed and usable
+A MySQL server with the database set up accordingly
+At least 100mb free on your web server. Slurp! itself only consumes 150~kb, but with file uploading being supported, extra space will be needed.
+An SMTP server (only if you want to enable registration approval)
