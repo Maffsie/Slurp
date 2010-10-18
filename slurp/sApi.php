@@ -135,7 +135,10 @@ switch($s_Shorten) {
 				$unique = true;
 		}
 		logInfo("Generated short url: $gen");
-		$filename = 'scrn_'.time().'.png';
+		if($_POST['fn'] == "" || strlen($_POST['fn']) == 0)
+	            $filename = 'scrn_'.time().'.png';
+	        else
+	            $filename = $_POST['fn'];
 		$ufile = $gen;
 		$servFile = "stored/$ufile";
 		$fcont = $uploaded;
