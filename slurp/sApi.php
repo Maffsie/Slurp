@@ -23,6 +23,13 @@ function check($chk) {
 	else
 		return false;
 }
+function fileValidate($fname) {
+	$filename = substr($fname,strlen($fname)-4,4);
+	if($filename == '.php' || $filename == '.htm' || $filename == 'html' || $fname == '.htaccess' || substr($filename,1) == '.js')
+		return false;
+	else
+		return true;
+}
 function validate($val) {
 	if(preg_match('/^([a-z0-9-\+]+)\b/i',$val))
 		return true;
@@ -139,6 +146,8 @@ switch($s_Shorten) {
 	            $filename = 'scrn_'.time().'.png';
 	        else
 	            $filename = $_POST['fn'];
+        if(!fileValidate($filename))
+        	die(header("HTTP/1.1 400 Bad Request"));
 		$ufile = $gen;
 		$servFile = "stored/$ufile";
 		$fcont = $uploaded;
