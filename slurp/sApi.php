@@ -30,6 +30,25 @@ function fileValidate($fname) {
 	else
 		return true;
 }
+function stripSpecialChars($fname) {
+	$fname = str_replace('\\','_',$fname);
+	$fname = str_replace('/','_',$fname);
+	$fname = str_replace('\'','_',$fname);
+	$fname = str_replace('?','_',$fname);
+	$fname = str_replace('%','_',$fname);
+	$fname = str_replace('*','_',$fname);
+	$fname = str_replace(':','_',$fname);
+	$fname = str_replace('|','_',$fname);
+	$fname = str_replace('"','_',$fname);
+	$fname = str_replace('<','_',$fname);
+	$fname = str_replace('>','_',$fname);
+	$fname = str_replace('&','_',$fname);
+	$fname = str_replace(' ','_',$fname);
+	$fname = str_replace(';','_',$fname);
+	$fname = str_replace('..','_',$fname);
+	$fname = mysqli_real_escape_sring($fname);
+	return $fname;
+}
 function validate($val) {
 	if(preg_match('/^([a-z0-9-\+]+)\b/i',$val))
 		return true;
@@ -146,6 +165,7 @@ switch($s_Shorten) {
 	            $filename = 'scrn_'.time().'.png';
 	        else
 	            $filename = $_POST['fn'];
+        $filename = stripSpecialChars($filename);
         if(!fileValidate($filename))
         	die(header("HTTP/1.1 400 Bad Request"));
 		$ufile = $gen;

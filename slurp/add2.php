@@ -37,6 +37,25 @@ function fileValidate($fname) {
 	else
 		return true;
 }
+function stripSpecialChars($fname) {
+	$fname = str_replace('\\','_',$fname);
+	$fname = str_replace('/','_',$fname);
+	$fname = str_replace('\'','_',$fname);
+	$fname = str_replace('?','_',$fname);
+	$fname = str_replace('%','_',$fname);
+	$fname = str_replace('*','_',$fname);
+	$fname = str_replace(':','_',$fname);
+	$fname = str_replace('|','_',$fname);
+	$fname = str_replace('"','_',$fname);
+	$fname = str_replace('<','_',$fname);
+	$fname = str_replace('>','_',$fname);
+	$fname = str_replace('&','_',$fname);
+	$fname = str_replace(' ','_',$fname);
+	$fname = str_replace(';','_',$fname);
+	$fname = str_replace('..','_',$fname);
+	$fname = mysqli_real_escape_sring($fname);
+	return $fname;
+}
 function specialCheck($chk) {
 	$arChk = array('add','upload','stored','admin','login','logout', 'install','uninstall','files','approve','sapi','style.css','config','config.php','request','register','delete','pyslurp','slurp','zip');
 	if(array_key_exists(strtolower($chk),$arChk))
@@ -85,7 +104,7 @@ if(isset($_POST['doWork']) && $_POST['doWork'] == 1 && (isset($_FILES['fupld']) 
 			$unique = true;
 	}
 	$file = $_FILES['fupld']['tmp_name'];
-	$orgname = basename($_FILES['fupld']['name']);
+	$orgname = stripSpecialChars(basename($_FILES['fupld']['name']));
 	if(fileValidate($orgname)) {
 		if(!file_exists('stored'))
 			mkdir('stored');
