@@ -1,5 +1,5 @@
 <?php
-$url = mysqli_real_escape_string(str_replace('/','',$_SERVER['REQUEST_URI'])); #Get base request data
+$url = str_replace('/','',$_SERVER['REQUEST_URI']); #Get base request data
 if($url == 'style.css') {
 	include('style.css');
 	die();

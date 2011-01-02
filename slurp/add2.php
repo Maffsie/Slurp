@@ -53,7 +53,6 @@ function stripSpecialChars($fname) {
 	$fname = str_replace(' ','_',$fname);
 	$fname = str_replace(';','_',$fname);
 	$fname = str_replace('..','_',$fname);
-	$fname = mysqli_real_escape_sring($fname);
 	return $fname;
 }
 function specialCheck($chk) {
