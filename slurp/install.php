@@ -192,7 +192,7 @@ CONF;
 						<h1>Extra configuration.</h1>
 						<b>Error: </b><?php echo $err; ?><br />
 						<form action='' method='post'>
-							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='4' /><br />
+							<span id='small'>How long do you want your short URLs to be? </span><input type='text' name='urlLen' value='2' /><br />
 							<span id='small'><abbr title="This should be something like: smallurl.com or short.website.com">What's the base address of your domain?</abbr><br />Auto-Detected. </span><input type='text' name='baseDomain' value="<?php $host = $_SERVER['SERVER_NAME']; if(substr($host,0,4) == 'www.') { $host = substr($host,4); } echo $host; ?>" /><br />
 							<h2>Mail settings</h2>
 							<span id='small'>Enable registrations? <input type='checkbox' name='reg_enable' /></span><br />
@@ -244,6 +244,7 @@ CONF;
 						<h1>Extra configuration complete!</h1>
 						<h2>You may need to edit the configuration further if your mail server requires authentication</h2>
 						Set up your user account<br />
+						Username must be at least 2 characters long, passwords must be greater than 6 characters.<br />
 						<form action='' method='post'>
 							<span id='small'>Username: </span><input type='text' name='uName' /><br />
 							<span id='small'>Password: </span><input type='password' name='uPass' /><br />
@@ -261,7 +262,7 @@ CONF;
 		$uP = $_POST['uPass'];
 		if(strlen($uN) == 0)
 			$err .= 'No username provided!<br />';
-		if(strlen($uN) > 0 && strlen($uN) <= 4)
+		if(strlen($uN) > 0 && strlen($uN) <= 2)
 			$err .= 'Username too short!<br />';
 		if(strlen($uP) == 0)
 			$err .= 'No password provided!<br />';
@@ -287,6 +288,7 @@ CONF;
 					<div id='wrapper'>
 						<h1>Set up your user account.</h1>
 						<b>Error:</b> <?php echo $err; ?><br />
+						Username must be at least 2 characters long, passwords must be greater than 6 characters.<br />
 						<form action='' method='post'>
 							<span id='small'>Username: </span><input type='text' name='uName' /><br />
 							<span id='small'>Password: </span><input type='password' name='uPass' /><br />
