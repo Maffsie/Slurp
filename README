@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Slurp! v0.51
 Slurp! is a URL shortener and file upload service. It is installable pretty much anywhere that wordpress is.
 Slurp! uses PHPMailer to send emails.
@@ -24,3 +25,24 @@ The PHP extension mysqli installed and usable
 A MySQL server with the database set up accordingly
 At least 100mb free on your web server. Slurp! itself only consumes 150~kb, but with file uploading being supported, extra space will be needed.
 An SMTP server (only if you want to enable registration approval)
+=======
+Slurp! 2.0 "Monster"
+
+Summary: Flexible file upload/URL shortening system written in PHP, and supporting multiple database systems.
+
+First off, what's Slurp?
+Slurp! is a URL shortener and file upload service, written to be as portable, lightweight and usable as possible.
+It has a robust user management and authentication system, API that's designed to be as usable as possible (URL shortening can be done unauthenticated using GET), and supports multiple database systems (SQLite, PostreSQL and MySQL).
+Slurp! is also highly configurable, and most elements of the system can be configured to your liking (Shortened URL length (though a lower limit of two is enforced), user registration/mail settings and so on).
+
+Why's Slurp! called that?
+I have this funny naming convention where I name everything after songs. Slurp! is a song by the band Desert Planet. This particular branch is codenamed Monster, after the Lady Gaga song.
+
+Server requirements:
+- A web server (lighttpd and Apache are directly supported, but it will work on any web server supporting CGI and URL rewrites.)
+- PHP 4.3 or newer
+- (Database-specific extensions go here)
+- A database and user account ready for use on your preferred database server (unless you're using SQLite)
+- Roughly 100kb free, initially. If you plan on using PostreSQL or MySQL, and have no need for the file upload functionality, then that's all you'll ever need. That being said, if you use SQLite, but don't upload files, then you'll still use disk space. If you'll be using it a lot, expect to need more than 10mb free disk space.
+- An SMTP server if you enable user registration, and opt to manually approve registrations.
+>>>>>>> 2.0-monster
