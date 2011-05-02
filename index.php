@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>Slurp! Landing page.</title>
+		<title>Slurp! 2.0 - Monster</title>
 		<style type="text/css">
 		body {
 			background: #9e9e9e;
@@ -33,8 +33,8 @@
 	</head>
 	<body>
 		<div id="container">
-			<h1>This is a completely inconspicuous web page.</h1>
-			<h2>Nobody would even know that hidden away, was <a href='/add'>a URL shortener</a>/<a href='/upload'>File uploader</a>.</h2>
+			<h1>Slurp! 2.0 - Monster</h1>
+			<h2>You've happened upon Slurp!'s landing page. If you don't know what Slurp! is, then you should <a href="http://github.com/maffc/slurp">click here</a>.</h2>
 		</div>
 	</body>
 </html>
