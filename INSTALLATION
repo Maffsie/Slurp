@@ -1,0 +1,10 @@
+Within this document, you'll find some basic tips you should keep in mind that will help the installation and configuration of your new Slurp! install much nicer and easier.
+
+First off, make sure you know what you're getting into. If words like "SQL", "PHP" and "variable" scare you, then this software may not be right for you. The rest of this document assumes you have a basic grasp of how servers work and so on.
+
+Before installing, please make sure you know what kind of database system you'd like to use. Slurp! suports MySQL, PostgreSQL and SQLite. If your host provides more than one of these, then you should know which one you'd prefer to use. To help with this, below is an explanation of the differences between each database system.
+- MySQL is one of the most popular RDBMS packages currently available, and is used by a few high-profile websites.
+- PostgreSQL is fully open-source and is apparently alright.
+- SQLite works somewhat differently from most other database systems, in that the database is stored in a single file on the webserver. If you feel that your server (and this service in particular) will be accessed by more than one or two users within a very small timeframe (a second or less), then you should use one of the other database systems, as SQLite does not like concurrent connections.
+
+This document will become longer as development progresses, this is just initial documentation to make life easier later.
