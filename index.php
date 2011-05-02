@@ -34,7 +34,7 @@
 	<body>
 		<div id="container">
 			<h1>Hi there.</h1>
-			<h2>You've stumbled across a Slurp! installation. If you don't know what Slurp! is, you should <a href="http://github.com/MaffC/Slurp">click here</a>.</h2>
+			<h2>You've happened upon Slurp!'s landing page. If you don't know what Slurp! is, then you should <a href="http://github.com/maffc/slurp">click here</a>.</h2>
 		</div>
 	</body>
 </html>
