@@ -152,7 +152,12 @@ switch($s_Shorten) {
 		$unique = false;
 		logInfo("Generating shortURL for file {$_FILES['fupld']['name']}.");
 		//Guarantees that the URL provided will be unique
+		$genc = 0;
 		while(!$unique) {
+			$genc++
+			if($genc > (65^$urllen))
+				setconfig('URL_LEN', $urllen+1);
+			$urllen++;
 			$g = $db->query("SELECT * FROM ".TB_MAIN." WHERE short='$gen'");
 			if($g->num_rows > 0 || !specialCheck($gen))
 				$gen = generate($urllen);
